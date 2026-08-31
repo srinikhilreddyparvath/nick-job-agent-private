@@ -1,0 +1,11 @@
+[
+  {
+    "name": "Example AI Company",
+    "website_url": "https://example.com/",
+    "careers_url": "https://example.com/careers",
+    "company_type": "AI_STARTUP",
+    "priority": "HIGH",
+    "enabled": true,
+    "notes": "Replace this placeholder with a company Nick wants to monitor, then run ATS detection. This file is never imported automatically."
+  }
+]

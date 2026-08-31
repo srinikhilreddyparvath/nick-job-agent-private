@@ -1,0 +1,1 @@
+import JobIngestor from "@/components/JobIngestor";export default function IngestPage(){return <div className="page-wrap"><header className="topbar"><div><p className="eyebrow">MANUAL DISCOVERY</p><h1>Add job URL</h1><p>Normalize, classify, deduplicate, and score a public job posting or pasted description.</p></div></header><JobIngestor/></div>}

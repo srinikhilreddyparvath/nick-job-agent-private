@@ -1,0 +1,2 @@
+import CompanyManager from "@/components/CompanyManager";import {getCompanies} from "@/lib/api";
+export default async function CompaniesPage(){return <div className="page-wrap"><header className="topbar"><div><p className="eyebrow">DISCOVERY GRAPH</p><h1>Companies</h1><p>Companies own careers pages and may connect to multiple job sources.</p></div></header><CompanyManager companies={await getCompanies()}/></div>}
