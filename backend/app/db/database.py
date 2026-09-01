@@ -30,10 +30,11 @@ def init_db() -> None:
     Base.metadata.create_all(bind=engine)
     if settings.database_url.startswith("sqlite"):
         additions={
-          "jobs":{"role_family":"VARCHAR(40) DEFAULT 'UNKNOWN'","role_family_confidence":"FLOAT DEFAULT 0","role_family_reasons":"JSON DEFAULT '[]'","classification_method":"VARCHAR(40) DEFAULT 'deterministic_rules'","family_fit_score":"FLOAT","family_component_scores":"JSON DEFAULT '{}'","family_recommendation":"VARCHAR(30)","family_strengths":"JSON DEFAULT '[]'","family_gaps":"JSON DEFAULT '[]'","matched_evidence_ids":"JSON DEFAULT '[]'","career_transition_flag":"BOOLEAN DEFAULT 0","career_transition_notes":"TEXT","raw_company":"VARCHAR(255)","canonical_company":"VARCHAR(255)","normalized_location":"VARCHAR(255)","description_fingerprint":"VARCHAR(64)","alternate_sources":"JSON DEFAULT '[]'"},
+          "jobs":{"role_family":"VARCHAR(40) DEFAULT 'UNKNOWN'","role_family_confidence":"FLOAT DEFAULT 0","role_family_reasons":"JSON DEFAULT '[]'","classification_method":"VARCHAR(40) DEFAULT 'deterministic_rules'","deterministic_family":"VARCHAR(40)","deterministic_confidence":"FLOAT","semantic_family":"VARCHAR(40)","semantic_confidence":"FLOAT","final_family":"VARCHAR(40)","classification_resolution_method":"VARCHAR(60)","family_fit_score":"FLOAT","family_component_scores":"JSON DEFAULT '{}'","family_recommendation":"VARCHAR(30)","family_strengths":"JSON DEFAULT '[]'","family_gaps":"JSON DEFAULT '[]'","matched_evidence_ids":"JSON DEFAULT '[]'","career_transition_flag":"BOOLEAN DEFAULT 0","career_transition_notes":"TEXT","raw_company":"VARCHAR(255)","canonical_company":"VARCHAR(255)","normalized_location":"VARCHAR(255)","description_fingerprint":"VARCHAR(64)","alternate_sources":"JSON DEFAULT '[]'"},
           "job_sources":{"company_id":"INTEGER","priority":"VARCHAR(20) DEFAULT 'NORMAL'","configuration":"JSON DEFAULT '{}'"},
           "scan_runs":{"jobs_by_source_type":"JSON DEFAULT '{}'","jobs_by_role_family":"JSON DEFAULT '{}'","duplicates_across_sources":"INTEGER DEFAULT 0","source_detection_failures":"INTEGER DEFAULT 0"},
-          "job_feedback":{"human_role_family":"VARCHAR(40)"}}
+          "job_feedback":{"human_role_family":"VARCHAR(40)"},
+          "agent_runs":{"provider":"VARCHAR(40)","model":"VARCHAR(120)","prompt_version":"VARCHAR(80)","temperature":"FLOAT","evidence_ids_used":"JSON DEFAULT '[]'","sources_used":"JSON DEFAULT '[]'","input_tokens":"INTEGER DEFAULT 0","output_tokens":"INTEGER DEFAULT 0","estimated_cost":"FLOAT DEFAULT 0","latency_ms":"INTEGER DEFAULT 0"}}
         with engine.begin() as connection:
             inspector=inspect(connection)
             for table,columns in additions.items():

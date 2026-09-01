@@ -144,6 +144,34 @@ Future agents may retrieve, select, combine, summarize, tailor, and rewrite veri
 
 Work authorization uses exact approved question-answer pairs. Materially different legal wording, including unrestricted/permanent authorization or no-immigration-support attestations, fails closed with `requires_human_review=true`.
 
+## Phase 3 semantic intelligence
+
+Phase 3 adds an optional semantic layer without replacing the deterministic pipeline. With `LLM_ENABLED=false`, discovery, filtering, deduplication, family classification, family scoring, tracking, and the dashboard continue to operate normally.
+
+`LLMService` exposes typed structured generation through provider adapters. OpenAI and Anthropic adapters use the configured provider/model and environment API key; the deterministic mock provider supports tests and local demonstrations without paid credentials. Prompt text and identifiers live under `backend/app/prompts`, currently `role_classifier_v1`, `fit_analysis_v1`, `research_agent_v1`, and `evidence_selection_v1`. Invalid structured output receives only the configured conservative retry count and then fails explicitly.
+
+`EmbeddingService` is provider-independent. The default hash embedding provider is deterministic, local, and intended for offline/test readiness; the OpenAI embedding adapter is available when explicitly configured. `SemanticEvidenceIndex` stores vectors and provider/model/version metadata in SQLite and computes cosine similarity in-process. The 38 canonical evidence IDs remain authoritative. `EvidenceService.search_hybrid` combines structured filters, deterministic matching, and semantic similarity, and falls back to deterministic retrieval if embeddings are unavailable.
+
+Semantic role classification is a fallback only. High-confidence deterministic classifications take precedence. For ambiguous jobs, both deterministic and semantic families/confidences are retained along with the final family and resolution method. Semantic fit similarly stores deterministic, semantic, and optionally blended scores separately; the configurable blend is an evaluation candidate, not a replacement baseline.
+
+`FitAgent` can retrieve a job, deterministic score, role family, preferences, feedback, and verified evidence through the explicit tool registry. It produces a typed `SemanticFitReport`. Every positive candidate strength must cite canonical evidence IDs and pass `EvidenceClaimValidator`; unsupported claims are removed from verified strengths, recorded, and surfaced as gaps/review items. Provider or embedding failures retain the deterministic result.
+
+`ResearchAgent` is active only for attributable public context. It can use stored job/company data and explicitly permitted public URLs. Each finding retains URL, title, source type, retrieval time, and excerpt. It cannot log in, use LinkedIn automation, bypass access controls/CAPTCHAs, send messages, or submit forms. Search-engine result scraping is not implemented; `WebSearchProvider` is an interface for a future authorized provider.
+
+Agent execution is bounded by configured steps, retries, token caps, timeouts, page limits, analysis thresholds, per-scan limits, and a daily-budget safeguard. Registered tools declare typed input/output schemas, allowed agents, sensitivity, and approval requirements. Agent runs retain action/tool traces, evidence IDs, sources, provider, model, prompt version, token counts, estimated cost, latency, status, and errors. Traces intentionally expose actions and structured results, never private chain-of-thought.
+
+Semantic analysis and research are fingerprint-cached using job content, evidence-set version, prompt version, and model configuration. A changed evidence set invalidates fit-analysis cache keys. The ranking evaluator reports deterministic, semantic, and blended Precision@5, nDCG@5, ranking agreement, score/label correlation, and a simple calibration bucket only when each score family has enough human labels.
+
+Phase 3 endpoints:
+
+- `POST /jobs/{id}/analyze` and `GET /jobs/{id}/analysis`
+- `POST /jobs/{id}/research` and `GET /jobs/{id}/research`
+- `GET /jobs/{id}/agent-runs`
+- `GET /models/status`
+- `POST /evidence/reindex`
+
+The job-detail UI keeps deterministic fit visible beside semantic and blended scores. It shows validated evidence-linked strengths, gaps, attributed research, subtle model metadata, and an optional structured agent trace. `AI ANALYZE` and `RESEARCH ROLE` are explicit actions; normal scans do not automatically spend LLM tokens on every job.
+
 ## Source and agent orchestration
 
 Persistent enabled sources flow through connector fetch, normalization, hard filters, structural deduplication, persistence, automatic deterministic scoring, recommendation, and scan-run metrics. A failing source records its error while other sources continue. CAPTCHA, access-control, and unsupported-site conditions are blocking states, never bypass targets.
@@ -192,8 +220,8 @@ npm run build
 - **Phase 1 - COMPLETE:** Core deterministic discovery and scoring.
 - **Phase 2 - COMPLETE:** Candidate evidence, policies, sources, orchestration, feedback, and agent contracts.
 - **Phase 2.5 - COMPLETE:** Multi-source discovery, company registry, ATS detection, expanded connectors, role-family routing, and family-specific scoring.
-- **Phase 2.6 - CURRENT:** Canonical identity hardening, approved application-name mapping, middle-name safeguards, and live-discovery readiness.
-- **Phase 3:** LLM semantic reasoning, embedding retrieval, ResearchAgent, and semantic FitAgent.
+- **Phase 2.6 - COMPLETE:** Canonical identity hardening, approved application-name mapping, middle-name safeguards, and live-discovery readiness.
+- **Phase 3 - CURRENT:** Semantic retrieval, provider-independent LLM infrastructure, semantic FitAgent, attributable ResearchAgent, agent tools, observability, and evaluation.
 - **Phase 4:** Evidence-grounded resume tailoring, answer generation, claim validation, and ReviewerAgent.
 - **Phase 5:** Playwright BrowserAgent, form understanding, field mapping, resume upload, and application preparation.
 - **Phase 6:** Evidence-validated autonomous submission, standing authorization, safe submission, and blocked-question handling.

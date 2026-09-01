@@ -68,6 +68,12 @@ class Job(JobBase):
     role_family_confidence: float = 0
     role_family_reasons: list[str] = Field(default_factory=list)
     classification_method: str = "deterministic_rules"
+    deterministic_family: RoleFamily | None = None
+    deterministic_confidence: float | None = None
+    semantic_family: RoleFamily | None = None
+    semantic_confidence: float | None = None
+    final_family: RoleFamily | None = None
+    classification_resolution_method: str | None = None
     family_fit_score: float | None = None
     family_component_scores: dict[str, dict] = Field(default_factory=dict)
     matched_evidence_ids: list[str] = Field(default_factory=list)

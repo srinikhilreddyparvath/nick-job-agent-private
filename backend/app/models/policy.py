@@ -47,4 +47,5 @@ class ClaimValidationResult(BaseModel):
     supporting_evidence_ids: list[str]
     support_status: ClaimSupportStatus
     confidence: float
+    reason: str = ""
     action: str

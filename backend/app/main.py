@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api import agents, applications, companies, feedback, jobs, profile, scans, sources
+from app.api import agents, applications, companies, feedback, jobs, profile, scans, sources, semantic
 from app.core.config import get_settings
 from app.db.database import init_db
 
@@ -21,7 +21,8 @@ app.include_router(jobs.router); app.include_router(profile.router); app.include
 app.include_router(sources.router); app.include_router(scans.router); app.include_router(feedback.router)
 app.include_router(agents.router)
 app.include_router(companies.router)
+app.include_router(semantic.router)
 
 
 @app.get("/health", tags=["system"])
-def health(): return {"status": "ok", "service": settings.app_name, "phase": 1}
+def health(): return {"status": "ok", "service": settings.app_name, "phase": 3}

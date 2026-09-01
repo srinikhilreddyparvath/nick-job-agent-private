@@ -41,6 +41,7 @@ class JobRecord(Base):
     role_family_confidence:Mapped[float]=mapped_column(Float,default=0)
     role_family_reasons:Mapped[list[str]]=mapped_column(JSON,default=list)
     classification_method:Mapped[str]=mapped_column(String(40),default="deterministic_rules")
+    deterministic_family:Mapped[str|None]=mapped_column(String(40));deterministic_confidence:Mapped[float|None]=mapped_column(Float);semantic_family:Mapped[str|None]=mapped_column(String(40));semantic_confidence:Mapped[float|None]=mapped_column(Float);final_family:Mapped[str|None]=mapped_column(String(40));classification_resolution_method:Mapped[str|None]=mapped_column(String(60))
     family_fit_score:Mapped[float|None]=mapped_column(Float)
     family_component_scores:Mapped[dict[str,Any]]=mapped_column(JSON,default=dict)
     family_recommendation:Mapped[str|None]=mapped_column(String(30))
@@ -158,3 +159,21 @@ class AgentRunRecord(Base):
     id:Mapped[int]=mapped_column(primary_key=True); agent_type:Mapped[str]=mapped_column(String(40),index=True); objective:Mapped[str]=mapped_column(Text); job_id:Mapped[int|None]=mapped_column(ForeignKey("jobs.id")); status:Mapped[str]=mapped_column(String(40),default="queued",index=True)
     started_at:Mapped[datetime|None]=mapped_column(DateTime(timezone=True)); completed_at:Mapped[datetime|None]=mapped_column(DateTime(timezone=True))
     input_state_json:Mapped[dict[str,Any]]=mapped_column(JSON,default=dict); output_state_json:Mapped[dict[str,Any]]=mapped_column(JSON,default=dict); actions_json:Mapped[list[dict[str,Any]]]=mapped_column(JSON,default=list); errors_json:Mapped[list[dict[str,Any]]]=mapped_column(JSON,default=list); requires_human_review:Mapped[bool]=mapped_column(default=False)
+    provider:Mapped[str|None]=mapped_column(String(40)); model:Mapped[str|None]=mapped_column(String(120)); prompt_version:Mapped[str|None]=mapped_column(String(80)); temperature:Mapped[float|None]=mapped_column(Float)
+    evidence_ids_used:Mapped[list[str]]=mapped_column(JSON,default=list); sources_used:Mapped[list[str]]=mapped_column(JSON,default=list); input_tokens:Mapped[int]=mapped_column(Integer,default=0); output_tokens:Mapped[int]=mapped_column(Integer,default=0); estimated_cost:Mapped[float]=mapped_column(Float,default=0); latency_ms:Mapped[int]=mapped_column(Integer,default=0)
+
+
+class EvidenceEmbeddingRecord(Base):
+    __tablename__="evidence_embeddings"
+    id:Mapped[int]=mapped_column(primary_key=True); evidence_id:Mapped[str]=mapped_column(String(80),index=True); evidence_version:Mapped[str]=mapped_column(String(64),index=True); provider:Mapped[str]=mapped_column(String(40)); model:Mapped[str]=mapped_column(String(120)); embedding_version:Mapped[str]=mapped_column(String(80)); vector:Mapped[list[float]]=mapped_column(JSON); generated_at:Mapped[datetime]=mapped_column(DateTime(timezone=True),default=utcnow)
+    __table_args__=(UniqueConstraint("evidence_id","evidence_version","provider","model",name="uq_evidence_embedding_version"),)
+
+
+class SemanticAnalysisRecord(Base):
+    __tablename__="semantic_analyses"
+    id:Mapped[int]=mapped_column(primary_key=True); job_id:Mapped[int]=mapped_column(ForeignKey("jobs.id"),index=True); fingerprint:Mapped[str]=mapped_column(String(64),unique=True,index=True); deterministic_score:Mapped[float|None]=mapped_column(Float); semantic_score:Mapped[float]=mapped_column(Float); blended_score:Mapped[float|None]=mapped_column(Float); report_json:Mapped[dict[str,Any]]=mapped_column(JSON); provider:Mapped[str]=mapped_column(String(40)); model:Mapped[str]=mapped_column(String(120)); prompt_version:Mapped[str]=mapped_column(String(80)); evidence_version:Mapped[str]=mapped_column(String(64)); input_tokens:Mapped[int]=mapped_column(Integer,default=0); output_tokens:Mapped[int]=mapped_column(Integer,default=0); estimated_cost:Mapped[float]=mapped_column(Float,default=0); latency_ms:Mapped[int]=mapped_column(Integer,default=0); created_at:Mapped[datetime]=mapped_column(DateTime(timezone=True),default=utcnow)
+
+
+class CompanyResearchRecord(Base):
+    __tablename__="company_research"
+    id:Mapped[int]=mapped_column(primary_key=True); company_id:Mapped[int|None]=mapped_column(ForeignKey("companies.id"),index=True); job_id:Mapped[int]=mapped_column(ForeignKey("jobs.id"),index=True); fingerprint:Mapped[str]=mapped_column(String(64),unique=True,index=True); summary:Mapped[str]=mapped_column(Text); technical_focus:Mapped[list[str]]=mapped_column(JSON,default=list); research_areas:Mapped[list[str]]=mapped_column(JSON,default=list); products:Mapped[list[str]]=mapped_column(JSON,default=list); role_context:Mapped[str]=mapped_column(Text,default=""); relevant_teams:Mapped[list[str]]=mapped_column(JSON,default=list); culture_signals:Mapped[list[str]]=mapped_column(JSON,default=list); hiring_signals:Mapped[list[str]]=mapped_column(JSON,default=list); sources:Mapped[list[dict[str,Any]]]=mapped_column(JSON,default=list); report_json:Mapped[dict[str,Any]]=mapped_column(JSON); generated_at:Mapped[datetime]=mapped_column(DateTime(timezone=True),default=utcnow); provider:Mapped[str]=mapped_column(String(40)); model:Mapped[str]=mapped_column(String(120)); prompt_version:Mapped[str]=mapped_column(String(80)); input_tokens:Mapped[int]=mapped_column(Integer,default=0); output_tokens:Mapped[int]=mapped_column(Integer,default=0); estimated_cost:Mapped[float]=mapped_column(Float,default=0); latency_ms:Mapped[int]=mapped_column(Integer,default=0)

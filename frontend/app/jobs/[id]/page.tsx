@@ -3,16 +3,18 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, ExternalLink, MapPin } from "lucide-react";
 import JobActions from "@/components/JobActions";
 import JobFeedback from "@/components/JobFeedback";
-import { getJob } from "@/lib/api";
+import AIAnalysisPanel from "@/components/AIAnalysisPanel";
+import { getAgentRuns, getAnalysis, getJob, getResearch } from "@/lib/api";
 
 export default async function JobPage({params}:{params:Promise<{id:string}>}) {
-  const {id}=await params; const job=await getJob(id); if(!job) notFound();
+  const {id}=await params; const [job,analysis,research,runs]=await Promise.all([getJob(id),getAnalysis(id),getResearch(id),getAgentRuns(id)]); if(!job) notFound();
   return <div className="page-wrap detail-page">
     <Link className="back" href="/"><ArrowLeft size={16}/> Back to job intelligence</Link>
     <header className="detail-header"><div><p className="eyebrow">{job.company}</p><h1>{job.title}</h1><div className="detail-family"><b>{job.role_family.replaceAll("_"," / ")}</b><span>Confidence {Math.round(job.role_family_confidence*100)}%</span>{job.career_transition_flag?<em>CAREER TRANSITION</em>:null}</div><div className="job-meta"><span><MapPin size={14}/>{job.location??"Not listed"}</span><span>{job.remote_type}</span><span>{job.employment_type??"Employment type not listed"}</span><span>Source: {job.source}</span></div></div><div className={`hero-score score-${job.recommendation??"none"}`}><strong>{job.fit_score??"—"}</strong><span>FAMILY FIT</span><em>{job.recommendation??"unscored"}</em></div></header>
     <JobActions jobId={job.id} status={job.application_status}/>
     <div className="detail-grid"><div className="detail-main">
       <section className="panel"><p className="panel-label">ANALYSIS</p><h2>Why it matches</h2><p>{job.fit_explanation??"Run deterministic scoring to generate an evidence-based fit explanation."}</p><h3>Strengths</h3><ul>{job.strengths.map(x=><li key={x}>{x}</li>)}</ul><h3>Matched skills</h3><div className="chips">{job.matched_skills.length?job.matched_skills.map(x=><span className="positive" key={x}>{x}</span>):<span>No matched skills recorded</span>}</div></section>
+      <AIAnalysisPanel jobId={job.id} deterministicScore={job.fit_score} initialAnalysis={analysis} initialResearch={research} initialRuns={runs}/>
       <section className="panel"><p className="panel-label">POSTING</p><h2>Job description</h2><p className="description">{job.description||"No description returned by the source."}</p></section>
       <section className="panel"><h2>Requirements</h2>{job.requirements.length?<ul>{job.requirements.map(x=><li key={x}>{x}</li>)}</ul>:<p>Requirements were not separately structured by the source.</p>}</section>
       <section className="panel"><h2>Preferred qualifications</h2>{job.preferred_qualifications.length?<ul>{job.preferred_qualifications.map(x=><li key={x}>{x}</li>)}</ul>:<p>No separately structured preferred qualifications.</p>}</section>

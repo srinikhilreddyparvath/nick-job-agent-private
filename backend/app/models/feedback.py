@@ -1,5 +1,6 @@
 from datetime import datetime
 from enum import StrEnum
+from typing import Any
 from pydantic import BaseModel, ConfigDict
 
 class HumanLabel(StrEnum): excellent="excellent"; good="good"; maybe="maybe"; poor="poor"
@@ -10,4 +11,4 @@ class JobFeedbackRead(JobFeedbackWrite):
 
 class EvaluationState(StrEnum): ready="ready"; insufficient_data="insufficient_data"
 class RankingEvaluation(BaseModel):
-    state:EvaluationState; labeled_jobs:int; minimum_required:int; metrics:dict[str,float]|None=None; message:str
+    state:EvaluationState; labeled_jobs:int; minimum_required:int; metrics:dict[str,Any]|None=None; message:str
