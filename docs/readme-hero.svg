@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="430" viewBox="0 0 1200 430" role="img" aria-labelledby="title desc">
+  <title id="title">Career Agent</title>
+  <desc id="desc">Career Agent turns a resume and preferences into a ranked, evidence-backed shortlist of jobs worth your attention.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#080c12"/>
+      <stop offset="0.55" stop-color="#0d1821"/>
+      <stop offset="1" stop-color="#15142a"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="82%" cy="22%" r="60%">
+      <stop offset="0" stop-color="#76e8ed" stop-opacity="0.20"/>
+      <stop offset="1" stop-color="#76e8ed" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="160%">
+      <feDropShadow dx="0" dy="14" stdDeviation="18" flood-color="#000000" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="430" rx="28" fill="url(#bg)"/>
+  <rect width="1200" height="430" rx="28" fill="url(#glow)"/>
+  <rect x="1" y="1" width="1198" height="428" rx="27" fill="none" stroke="#ffffff" stroke-opacity="0.10"/>
+  <g transform="translate(64 58)">
+    <path d="M28 0 56 28 28 56 0 28Z" fill="none" stroke="#76e8ed" stroke-width="2" opacity="0.8"/>
+    <path d="m38 13-7 22-20 11 12-23Z" fill="#76e8ed"/>
+  </g>
+  <text x="144" y="86" fill="#f0f4f8" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="700">CAREER AGENT</text>
+  <text x="64" y="163" fill="#f0f4f8" font-family="Segoe UI, Arial, sans-serif" font-size="52" font-weight="700" letter-spacing="-2">Automate the search.</text>
+  <text x="64" y="216" fill="#76e8ed" font-family="Segoe UI, Arial, sans-serif" font-size="52" font-weight="700" letter-spacing="-2">Not the ambition.</text>
+  <text x="66" y="258" fill="#a5b3c1" font-family="Segoe UI, Arial, sans-serif" font-size="18">Turn your resume and preferences into a ranked, evidence-backed shortlist.</text>
+  <g filter="url(#shadow)" font-family="Segoe UI, Arial, sans-serif">
+    <g transform="translate(64 304)">
+      <rect width="214" height="72" rx="14" fill="#111a24" stroke="#76e8ed" stroke-opacity="0.35"/>
+      <text x="18" y="30" fill="#76e8ed" font-size="12" font-weight="700">01</text>
+      <text x="18" y="52" fill="#f0f4f8" font-size="17" font-weight="600">Resume + preferences</text>
+    </g>
+    <path d="M290 340h42" stroke="#76e8ed" stroke-width="2" stroke-linecap="round"/>
+    <path d="m326 334 8 6-8 6" fill="none" stroke="#76e8ed" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <g transform="translate(346 304)">
+      <rect width="214" height="72" rx="14" fill="#111a24" stroke="#afa0f7" stroke-opacity="0.40"/>
+      <text x="18" y="30" fill="#afa0f7" font-size="12" font-weight="700">02</text>
+      <text x="18" y="52" fill="#f0f4f8" font-size="17" font-weight="600">Find relevant jobs</text>
+    </g>
+    <path d="M572 340h42" stroke="#afa0f7" stroke-width="2" stroke-linecap="round"/>
+    <path d="m608 334 8 6-8 6" fill="none" stroke="#afa0f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <g transform="translate(628 304)">
+      <rect width="214" height="72" rx="14" fill="#111a24" stroke="#9bdfb7" stroke-opacity="0.40"/>
+      <text x="18" y="30" fill="#9bdfb7" font-size="12" font-weight="700">03</text>
+      <text x="18" y="52" fill="#f0f4f8" font-size="17" font-weight="600">Rank + explain</text>
+    </g>
+    <path d="M854 340h42" stroke="#9bdfb7" stroke-width="2" stroke-linecap="round"/>
+    <path d="m890 334 8 6-8 6" fill="none" stroke="#9bdfb7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <g transform="translate(910 304)">
+      <rect width="214" height="72" rx="14" fill="#13231f" stroke="#9bdfb7" stroke-opacity="0.55"/>
+      <text x="18" y="30" fill="#9bdfb7" font-size="12" font-weight="700">04</text>
+      <text x="18" y="52" fill="#f0f4f8" font-size="17" font-weight="600">You decide</text>
+    </g>
+  </g>
+  <g font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600">
+    <rect x="850" y="58" width="110" height="32" rx="16" fill="#76e8ed" fill-opacity="0.10" stroke="#76e8ed" stroke-opacity="0.28"/>
+    <text x="905" y="79" text-anchor="middle" fill="#76e8ed">LOCAL-FIRST</text>
+    <rect x="972" y="58" width="116" height="32" rx="16" fill="#afa0f7" fill-opacity="0.10" stroke="#afa0f7" stroke-opacity="0.28"/>
+    <text x="1030" y="79" text-anchor="middle" fill="#afa0f7">OPEN SOURCE</text>
+  </g>
+</svg>
