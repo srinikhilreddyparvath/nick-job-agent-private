@@ -1,4 +1,4 @@
-from pathlib import Path
+﻿from pathlib import Path
 
 from app.agents.fit import FitAgent
 from app.agents.orchestrator import AgentOrchestrator
@@ -16,33 +16,31 @@ from app.services.scoring_service import DeterministicScoringEngine
 
 class MockConnector:
     def fetch_jobs(self,identifier,company):
-        return [Job(external_id="mock-1",source="greenhouse",company=company,title="Applied Scientist - Search",location="San Francisco, CA",remote_type="hybrid",employment_type="full-time",description="Machine learning research for information retrieval, ranking, Python, experimentation, and semantic search",requirements=["Python","Information Retrieval"],preferred_qualifications=["Applied research"],apply_url=f"https://example.com/{identifier}/apply",source_url=f"https://example.com/{identifier}")]
+        return [Job(external_id="mock-1",source="greenhouse",company=company,title="Applied Scientist - Search",location="Metro City, USA",remote_type="hybrid",employment_type="full-time",description="Machine learning research for information retrieval, ranking, Python, experimentation, and semantic search",requirements=["Python","Information Retrieval"],preferred_qualifications=["Applied research"],apply_url=f"https://example.com/{identifier}/apply",source_url=f"https://example.com/{identifier}")]
 
 
 def test_resume_and_canonical_profile(client):
-    resume=Path(__file__).resolve().parents[2]/"documents"/"master_resume.pdf"
-    assert resume.exists() and resume.stat().st_size>100_000
     profile=client.get("/profile")
     assert profile.status_code==200
-    assert profile.json()["identity"]["legal_name"]=="Srinikhil Reddy Parvath"
-    assert len(profile.json()["experience"])==3
+    assert profile.json()["identity"]["legal_name"]=="Alex Morgan"
+    assert len(profile.json()["experience"])==1
 
 
 def test_evidence_creation_and_retrieval(client):
     service=EvidenceService()
-    assert service.get_by_id("WALMART_004").verified
-    assert service.search(company="Walmart",domains=["evaluation"])
-    assert service.search(skills=["PyTorch","Python"])
-    assert service.search(category="research")
-    assert service.search(text_query="cold start ranking")
-    assert client.get("/profile/evidence?company=Walmart").status_code==200
-    assert client.get("/profile/evidence/WALMART_004").json()["category"]=="experience"
+    assert service.get_by_id("EXPERIENCE_002").verified
+    assert service.search(company="Northstar",domains=["ranking"])
+    assert service.search(skills=["Python"])
+    assert service.search(category="experience")
+    assert service.search(text_query="ranking variants")
+    assert client.get("/profile/evidence?company=Northstar").status_code==200
+    assert client.get("/profile/evidence/EXPERIENCE_002").json()["category"]=="experience"
 
 
 def test_preferences_answers_and_work_authorization():
-    data=Path(__file__).resolve().parents[2]/"data"/"job_preferences.example.json"
+    data=Path(__file__).resolve().parents[2]/"data"/"preferences.example.json"
     prefs=JobPreferences.model_validate_json(data.read_text(encoding="utf-8"))
-    assert "Research Scientist" in prefs.preferred_titles
+    assert "Research Engineer" in prefs.preferred_titles
     assert prefs.compensation.salary_is_hard_filter is False
     bank=AnswerBankService().all(); assert bank["approved_structured"][0].answer_type=="APPROVED_STRUCTURED"
     service=WorkAuthorizationService()

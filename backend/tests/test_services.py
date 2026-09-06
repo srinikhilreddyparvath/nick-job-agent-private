@@ -1,4 +1,4 @@
-from app.models.job import Job
+﻿from app.models.job import Job
 from app.models.profile import CandidateProfile, JobPreferences, ProfileItem
 from app.services.dedupe_service import canonicalize_url, normalize_text
 from app.services.scoring_service import DeterministicScoringEngine

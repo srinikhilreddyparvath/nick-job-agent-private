@@ -2,12 +2,12 @@
 import {FormEvent,useState,useTransition} from "react";
 import {useRouter} from "next/navigation";
 import {DatabaseZap,Plus,RefreshCw,Trash2} from "lucide-react";
-import {API_URL} from "@/lib/api";
+import {apiFetch} from "@/lib/client-api";
 import {JobSource,ScanRun} from "@/lib/types";
 
 export default function SourceManager({sources,scans}:{sources:JobSource[];scans:ScanRun[]}){
  const router=useRouter();const [pending,startTransition]=useTransition();const [showAdd,setShowAdd]=useState(false);const [status,setStatus]=useState("");
- async function request(path:string,options?:RequestInit){setStatus("");const response=await fetch(`${API_URL}${path}`,options);if(!response.ok)throw new Error(await response.text());return response.status===204?null:response.json()}
+ async function request(path:string,options?:RequestInit){setStatus("");const response=await apiFetch(path,options);if(!response.ok)throw new Error(await response.text());return response.status===204?null:response.json()}
  function refresh(){startTransition(()=>router.refresh())}
  async function scanAll(){setStatus("Scanning enabled sources…");try{const run=await request("/sources/scan-all",{method:"POST"});setStatus(`Scan ${run.status}: ${run.jobs_added} new, ${run.jobs_scored} scored`);refresh()}catch{setStatus("Scan failed. Check source errors and backend connectivity.")}}
  async function add(event:FormEvent<HTMLFormElement>){event.preventDefault();const form=new FormData(event.currentTarget);try{await request("/sources",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({company:form.get("company"),ats_type:form.get("ats_type"),board_identifier:form.get("board_identifier"),careers_url:form.get("careers_url")||null,enabled:true,scan_frequency:"manual"})});setShowAdd(false);refresh()}catch{setStatus("Could not add source.")}}

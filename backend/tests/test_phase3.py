@@ -1,4 +1,4 @@
-import json
+﻿import json
 from pathlib import Path
 
 import pytest
@@ -37,6 +37,15 @@ def test_provider_abstraction_mock_and_structured_validation():
     with pytest.raises(LLMError):broken.generate_structured("system","{}",SemanticRoleClassification)
 
 
+def test_structured_output_drops_empty_only_for_defaulted_metadata():
+    valid={"job_id":1,"role_family":"RESEARCH_AI","semantic_fit_score":80,"confidence":.8,"recommended_action":"review","reasoning_summary":"Grounded summary","created_at":""}
+    report,_=LLMService(MockLLMProvider(responses={"SemanticFitReport":valid})).generate_structured("system","{}",SemanticFitReport)
+    assert report.created_at is not None
+    invalid={**valid,"reasoning_summary":""};invalid.pop("created_at")
+    report,_=LLMService(MockLLMProvider(responses={"SemanticFitReport":invalid})).generate_structured("system","{}",SemanticFitReport)
+    assert report.reasoning_summary==""
+
+
 def test_prompt_versions_are_explicit():
     from app.prompts.fit_analysis_v1 import VERSION as fit
     from app.prompts.research_agent_v1 import VERSION as research
@@ -49,7 +58,7 @@ def test_embedding_service_persistence_semantic_and_hybrid_retrieval():
     assert len(vector.vector)==128 and vector.provider=="mock"
     with SessionLocal() as db:
         index=SemanticEvidenceIndex(embeddings=service);status=index.reindex(db)
-        assert status["indexed"]==38 and db.query(EvidenceEmbeddingRecord).count()==38
+        expected=len(EvidenceService().all());assert status["indexed"]==expected and db.query(EvidenceEmbeddingRecord).count()==expected
         semantic=index.search(db,"production ranking evaluation",limit=5)
         hybrid=EvidenceService().search_hybrid(db,"cold start ranking",limit=5,embedding_service=service)
         assert semantic and hybrid and all(x.evidence_id for x in hybrid)
@@ -61,7 +70,7 @@ def test_embedding_failure_falls_back_to_deterministic():
         def embed_batch(self,texts):raise EmbeddingError("offline")
     with SessionLocal() as db:
         evidence=EvidenceService();assert evidence.search_semantic(db,"ranking",embedding_service=EmbeddingService(Broken()))==[]
-        assert evidence.search_hybrid(db,"cold start ranking",embedding_service=EmbeddingService(Broken()))
+        assert evidence.search_hybrid(db,"ranking evaluation",embedding_service=EmbeddingService(Broken()))
 
 
 def test_semantic_classifier_fallback_and_deterministic_precedence():
@@ -73,8 +82,13 @@ def test_semantic_classifier_fallback_and_deterministic_precedence():
 
 
 def test_claim_validator_supported_and_unsupported():
-    validator=EvidenceClaimValidator();record=EvidenceService().get_by_id("WALMART_001");supported=validator.validate(ClaimValidationRequest(generated_claim=record.statement,supporting_evidence_ids=[record.id]));unsupported=validator.validate(ClaimValidationRequest(generated_claim="Led quantum computing research",supporting_evidence_ids=[]))
+    validator=EvidenceClaimValidator();record=EvidenceService().get_by_id("EXPERIENCE_001");supported=validator.validate(ClaimValidationRequest(generated_claim=record.statement,supporting_evidence_ids=[record.id]));unsupported=validator.validate(ClaimValidationRequest(generated_claim="Led quantum computing research",supporting_evidence_ids=[]))
     assert supported.support_status in {"supported","partially_supported"};assert unsupported.support_status=="unsupported" and unsupported.action=="remove_or_rephrase_as_gap"
+
+
+def test_gap_validator_removes_claims_contradicted_by_canonical_evidence():
+    kept,removed=EvidenceClaimValidator().filter_contradicted_gaps(["No verified Python evidence.","No verified publication record."])
+    assert removed==["No verified Python evidence."] and kept==["No verified publication record."]
 
 
 def test_semantic_fit_grounding_persistence_cache_and_agent_trace(client):
@@ -115,6 +129,20 @@ def test_mock_model_selects_only_registered_tool_in_bounded_loop():
     registry=ToolRegistry();registry.register(AgentTool("fit_only","test",Input,None,{"fit"},lambda value:{"value":value}))
     _,actions,state,usage,_=BoundedLLMToolExecutor(registry,LLMService(MockLLMProvider())).execute("fit","Use the permitted test tool",{},["fit_only"],{"fit_only":{"value":7}})
     assert actions[0]["tool"]=="fit_only" and state["tool_outputs"][0]["output"]=={"value":7} and usage.input_tokens>0
+
+
+def test_model_selected_single_tool_can_terminate_for_fixed_agent_stage():
+    class Input(BaseModel):value:int
+    registry=ToolRegistry();registry.register(AgentTool("fit_only","test",Input,None,{"fit"},lambda value:{"value":value}))
+    final,actions,state,_,_=BoundedLLMToolExecutor(registry,LLMService(MockLLMProvider())).execute("fit","Retrieve once",{},["fit_only"],{"fit_only":{"value":3}},stop_after_tool=True)
+    assert final=={"tool_completed":"fit_only"} and len(actions)==1 and state["tool_outputs"][0]["output"]=={"value":3}
+
+
+def test_model_cannot_override_application_validated_tool_arguments():
+    class Input(BaseModel):value:int
+    provider=MockLLMProvider(responses={"AgentToolDecision":{"action":"tool","tool_name":"fit_only","arguments":{"value":999}}});registry=ToolRegistry();registry.register(AgentTool("fit_only","test",Input,None,{"fit"},lambda value:{"value":value}))
+    _,actions,state,_,_=BoundedLLMToolExecutor(registry,LLMService(provider)).execute("fit","Retrieve once",{},["fit_only"],{"fit_only":{"value":4}},stop_after_tool=True)
+    assert actions[0]["arguments"]=={"value":4} and state["tool_outputs"][0]["output"]=={"value":4}
 
 
 def test_provider_failure_and_cost_limit_return_deterministic_fallback(client):

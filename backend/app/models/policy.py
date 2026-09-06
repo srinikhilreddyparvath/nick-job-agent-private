@@ -19,6 +19,9 @@ class ApprovedAnswer(BaseModel):
     generation_method: str = "human_approved"
     verified: bool = True
     requires_review: bool = False
+    answer_category: str | None = None
+    scope: str | None = None
+    approval_source: str | None = None
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 

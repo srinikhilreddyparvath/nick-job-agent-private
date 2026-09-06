@@ -4,6 +4,7 @@ from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field, HttpUrl
 from app.models.role_family import RoleFamily
+from app.models.opportunity import OpportunityScore
 
 
 class RemoteType(StrEnum):
@@ -83,6 +84,13 @@ class Job(JobBase):
     canonical_company: str | None = None
     normalized_location: str | None = None
     alternate_sources: list[dict] = Field(default_factory=list)
+    opportunity_score: OpportunityScore | None = None
+    semantic_fit_score: float | None = None
+    semantic_fit_confidence: float | None = None
+    semantic_analysis_status: str = "NOT_ANALYZED"
+    semantic_provider: str | None = None
+    semantic_model: str | None = None
+    semantic_estimated_cost: float = 0
 
     model_config = ConfigDict(from_attributes=True)
 

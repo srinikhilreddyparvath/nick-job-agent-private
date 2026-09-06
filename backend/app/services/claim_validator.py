@@ -13,4 +13,14 @@ class EvidenceClaimValidator(ClaimValidator):
         stop={"nick","has","with","and","the","for","from","experience","strong","extensive","work"};claim={x for x in re.findall(r"[a-z0-9]+",request.generated_claim.lower()) if len(x)>2 and x not in stop};source={x for record in records for x in re.findall(r"[a-z0-9]+",(" ".join([record.statement,*record.skills,*record.domains])).lower()) if len(x)>2 and x not in stop};overlap=len(claim&source)/max(1,len(claim))
         status="supported" if overlap>=.55 else "partially_supported" if overlap>=.25 else "ambiguous" if overlap>=.1 else "unsupported";action="allow" if status=="supported" else "qualify" if status=="partially_supported" else "review" if status=="ambiguous" else "remove_or_rephrase_as_gap"
         return ClaimValidationResult(generated_claim=request.generated_claim,supporting_evidence_ids=request.supporting_evidence_ids,support_status=status,confidence=round(max(overlap,1-overlap) if status in {"supported","unsupported"} else .6,2),reason=f"Verified evidence term coverage: {overlap:.0%}",action=action)
+    def filter_contradicted_gaps(self,gaps:list[str])->tuple[list[str],list[str]]:
+        records=[x for x in self.evidence.all() if x.verified];skills={skill.lower() for record in records for skill in record.skills};has_education=any(x.category=="education" for x in records);kept=[];removed=[]
+        for gap in gaps:
+            normalized=gap.lower();contradicted=False
+            for skill in (x for x in skills if len(x)>=3):
+                if f"no verified {skill} evidence" in normalized or (f"{skill} proficiency" in normalized and any(term in normalized for term in ("not established","not verified","no verified"))):contradicted=True
+            if "no academic credentials" in normalized and has_education:contradicted=True
+            if contradicted:removed.append(gap)
+            else:kept.append(gap)
+        return kept,removed
 FutureClaimValidator=EvidenceClaimValidator

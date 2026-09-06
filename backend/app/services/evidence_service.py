@@ -2,13 +2,15 @@ import json
 from pathlib import Path
 
 from app.models.profile import EvidenceRecord
+from app.services.profile_service import _configured_path
+from app.core.config import get_settings
 
 
 class EvidenceService:
     """Canonical verified evidence retrieval with deterministic and optional semantic paths."""
     def __init__(self,path:Path|None=None):
-        self.path=path or Path(__file__).resolve().parents[3]/"data"/"evidence.json"
-        self._records=[EvidenceRecord.model_validate(x) for x in json.loads(self.path.read_text(encoding="utf-8"))]
+        self.path=path or _configured_path(get_settings().candidate_evidence_path,"evidence.example.json")
+        self._records=[EvidenceRecord.model_validate(x) for x in json.loads(self.path.read_text(encoding="utf-8"))] if self.path.exists() else []
     def get_by_id(self,evidence_id:str)->EvidenceRecord|None: return next((x for x in self._records if x.id==evidence_id),None)
     def all(self)->list[EvidenceRecord]:return list(self._records)
     def search(self,*,company:str|None=None,domains:list[str]|None=None,skills:list[str]|None=None,category:str|None=None,role:str|None=None,text_query:str|None=None)->list[EvidenceRecord]:

@@ -6,6 +6,6 @@
     "company_type": "AI_STARTUP",
     "priority": "HIGH",
     "enabled": true,
-    "notes": "Replace this placeholder with a company Nick wants to monitor, then run ATS detection. This file is never imported automatically."
+    "notes": "Replace this placeholder with a company the user wants to monitor, then run ATS detection. This file is never imported automatically."
   }
 ]

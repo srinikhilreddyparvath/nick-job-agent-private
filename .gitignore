@@ -4,6 +4,30 @@ __pycache__/
 .pytest_cache/
 .venv/
 *.db
+*.sqlite
+*.sqlite3
+*.dump
+*.sql.gz
+generated/
+artifacts/
+logs/
+output/pdf/
+tmp/pdfs/
+browser-state/
+playwright-report/
+test-results/
+*.trace.zip
+*.har
+*.log
+documents/*.pdf
+!documents/README.md
+data/*.local.json
+data/private/
+data/profile.json
+data/preferences.json
+data/evidence.json
+data/answer_bank.json
+data/application_policy.json
 
 # Node / Next.js
 node_modules/
@@ -21,4 +45,6 @@ out/
 Thumbs.db
 .idea/
 .vscode/
-
+backups/
+*.bak
+*.backup

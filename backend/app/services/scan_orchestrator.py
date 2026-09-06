@@ -8,6 +8,7 @@ from app.agents.fit import FitAgent
 from app.connectors import CONNECTORS
 from app.db.models import JobSourceRecord,ScanRunRecord
 from app.models.profile import CandidateProfile,JobPreferences
+from app.services.profile_service import load_profile,load_preferences
 from app.services.dedupe_service import DedupeService
 from app.services.filter_service import JobFilterService
 from app.services.job_service import JobService
@@ -18,7 +19,7 @@ from app.services.family_scoring_service import FamilyScoringEngine
 class ScanOrchestrator:
     def __init__(self,connectors:dict|None=None):
         self.connectors=connectors or CONNECTORS; self.jobs=JobService(); self.dedupe=DedupeService(); self.filters=JobFilterService(); self.scorer=FitAgent(DeterministicScoringEngine())
-        data=Path(__file__).resolve().parents[3]/"data"; self.profile=CandidateProfile.model_validate_json((data/"profile.example.json").read_text(encoding="utf-8")); self.preferences=JobPreferences.model_validate_json((data/"job_preferences.example.json").read_text(encoding="utf-8"));self.classifier=DeterministicRoleFamilyClassifier();self.family_scorer=FamilyScoringEngine()
+        self.profile=load_profile();self.preferences=load_preferences();self.classifier=DeterministicRoleFamilyClassifier();self.family_scorer=FamilyScoringEngine()
     def scan(self,db:Session,sources:list[JobSourceRecord])->ScanRunRecord:
         started=perf_counter(); run=ScanRunRecord(status="running",source_count=len(sources)); db.add(run); db.commit(); db.refresh(run)
         bands={"exceptional":0,"strong":0,"possible":0,"weak":0,"skip":0}; errors=[];by_source={};by_family={"RESEARCH_AI":0,"DATA_SCIENCE":0,"PRODUCT_MANAGEMENT":0,"UNKNOWN":0}

@@ -13,6 +13,7 @@ from app.services.claim_validator import EvidenceClaimValidator
 from app.services.evidence_service import EvidenceService
 from app.services.job_service import JobService
 from app.services.tool_registry import AgentTool,ToolRegistry
+from app.services.profile_service import load_preferences
 
 class JobIdInput(BaseModel):job_id:int
 class EvidenceQueryInput(BaseModel):query:str;limit:int=Field(default=10,ge=1,le=20)
@@ -36,8 +37,7 @@ def build_phase3_tool_registry(db:Session,evidence:EvidenceService|None=None)->T
     def deterministic_score(job_id):
         row=db.scalar(select(JobScoreRecord).where(JobScoreRecord.job_id==job_id).order_by(JobScoreRecord.created_at.desc()));return ValueOutput(value=row.overall_score if row else None)
     def role_family(job_id):return ValueOutput(value=get_job(job_id).role_family)
-    def preferences():
-        path=Path(__file__).resolve().parents[3]/"data"/"job_preferences.example.json";return ValueOutput(value=JobPreferences.model_validate_json(path.read_text(encoding="utf-8")).model_dump(mode="json"))
+    def preferences():return ValueOutput(value=load_preferences().model_dump(mode="json"))
     def feedback(job_id):
         row=db.scalar(select(JobFeedbackRecord).where(JobFeedbackRecord.job_id==job_id));return FeedbackOutput(human_label=row.human_label if row else None,human_notes=row.human_notes if row else None)
     def company(job_id):
@@ -49,7 +49,7 @@ def build_phase3_tool_registry(db:Session,evidence:EvidenceService|None=None)->T
     registry.register(AgentTool("get_deterministic_score","Load the stored deterministic baseline score",JobIdInput,ValueOutput,{"fit"},deterministic_score))
     registry.register(AgentTool("get_role_family","Load deterministic/final role-family state",JobIdInput,ValueOutput,{"fit"},role_family))
     registry.register(AgentTool("get_job_preferences","Load configured job preferences",EmptyInput,ValueOutput,{"fit"},preferences))
-    registry.register(AgentTool("get_human_feedback_history","Load Nick's current feedback for the job",JobIdInput,FeedbackOutput,{"fit"},feedback))
+    registry.register(AgentTool("get_human_feedback_history","Load the user's current feedback for the job",JobIdInput,FeedbackOutput,{"fit"},feedback))
     registry.register(AgentTool("validate_claim","Validate a candidate claim against supplied evidence IDs",ClaimValidationRequest,ClaimValidationResult,{"fit"},validate_claim))
     registry.register(AgentTool("get_company","Load company registry context for a job",JobIdInput,CompanyOutput,{"research"},company))
     return registry

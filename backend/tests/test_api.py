@@ -1,4 +1,4 @@
-from app.db.database import SessionLocal
+﻿from app.db.database import SessionLocal
 from app.models.job import Job
 from app.services.job_service import JobService
 

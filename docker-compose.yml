@@ -1,0 +1,63 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: nick_job_agent
+      POSTGRES_USER: nick_agent
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-local-only-password}
+    healthcheck: {test: ["CMD-SHELL", "pg_isready -U nick_agent"], interval: 5s, timeout: 3s, retries: 10}
+    volumes: [postgres_data:/var/lib/postgresql/data]
+  api:
+    build: ./backend
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+    environment: &backend_env
+      DATABASE_URL: postgresql+psycopg://nick_agent:${POSTGRES_PASSWORD:-local-only-password}@postgres:5432/nick_job_agent
+      ENVIRONMENT: production
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      LLM_ENABLED: ${LLM_ENABLED:-false}
+      LLM_PROVIDER: ${LLM_PROVIDER:-}
+      LLM_MODEL: ${LLM_MODEL:-}
+      CANDIDATE_PROFILE_PATH: ${CANDIDATE_PROFILE_PATH:-../data/profile.local.json}
+      CANDIDATE_PREFERENCES_PATH: ${CANDIDATE_PREFERENCES_PATH:-../data/preferences.local.json}
+      CANDIDATE_EVIDENCE_PATH: ${CANDIDATE_EVIDENCE_PATH:-../data/evidence.local.json}
+      CANDIDATE_ANSWER_BANK_PATH: ${CANDIDATE_ANSWER_BANK_PATH:-../data/answer_bank.local.json}
+      CANDIDATE_APPLICATION_POLICY_PATH: ${CANDIDATE_APPLICATION_POLICY_PATH:-../data/application_policy.local.json}
+      AUTO_SUBMIT_ENABLED: "false"
+      APPLICATION_MODE: manual
+    depends_on: {migrate: {condition: service_completed_successfully}}
+    ports: ["8000:8000"]
+    volumes:
+      - artifacts:/generated
+      - ./data:/data
+      - ./documents:/documents:ro
+  worker:
+    build: ./backend
+    command: python -m app.worker
+    environment: *backend_env
+    depends_on: {migrate: {condition: service_completed_successfully}}
+    volumes:
+      - artifacts:/generated
+      - ./data:/data:ro
+      - ./documents:/documents:ro
+  scheduler:
+    build: ./backend
+    command: python -m app.scheduler
+    environment: *backend_env
+    depends_on: {migrate: {condition: service_completed_successfully}}
+    volumes:
+      - ./data:/data:ro
+      - ./documents:/documents:ro
+  migrate:
+    build: ./backend
+    command: alembic upgrade head
+    environment: *backend_env
+    depends_on: {postgres: {condition: service_healthy}}
+    restart: "no"
+  frontend:
+    build:
+      context: ./frontend
+      args: {NEXT_PUBLIC_API_URL: "http://localhost:8000"}
+    environment: {NEXT_PUBLIC_API_URL: "http://localhost:8000", INTERNAL_API_URL: "http://api:8000", PORT: "3000", HOSTNAME: "0.0.0.0"}
+    ports: ["3000:3000"]
+    depends_on: [api]
+volumes: {postgres_data: {}, artifacts: {}}

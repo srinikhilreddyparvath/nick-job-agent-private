@@ -1,5 +1,6 @@
-from app.agents.base import DeterministicAgent,inactive_definition
-from app.models.agent import AgentType
+from app.agents.base import DeterministicAgent
+from app.models.agent import AgentDefinition,AgentType
 class BrowserAgent(DeterministicAgent):
-    definition=inactive_definition(AgentType.browser,"Prepare and eventually fill supported application forms",["IdentityService","future Playwright browser","ClaimValidator"])
-    def run(self,*_args,**_kwargs): raise NotImplementedError("BrowserAgent is inactive; Playwright is not installed")
+ definition=AgentDefinition(agent_type=AgentType.browser,objective="Inspect, map, fill, and when authorized submit using validated package content",allowed_tools=["open_application_page","inspect_form","inspect_visible_fields","inspect_required_fields","inspect_select_options","map_form_fields","fill_text_field","select_option","toggle_checkbox","upload_file","navigate_application_steps","read_validation_errors","save_application_progress","capture_safe_debug_snapshot","submit_application"],input_state=["job","validated package","mode"],output_state=["form schema","events","receipt or blocker"],allowed_actions=["inspect","fill","upload approved artifact","separately authorized submit"],evidence_access="validated package only",failure_behavior="fail closed and continue queue",requires_human_review_conditions=["unknown required field","sensitive field","CAPTCHA","authentication","site protection"],active=True)
+ def __init__(self,orchestrator=None):self.orchestrator=orchestrator
+ def run(self,db,job_id,request,page=None):return self.orchestrator.run(db,job_id,request,page)

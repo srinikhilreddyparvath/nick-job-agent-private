@@ -1,0 +1,20 @@
+{
+  "preferred_titles": ["Machine Learning Engineer", "Data Scientist", "Research Engineer"],
+  "excluded_titles": ["Intern"],
+  "preferred_domains": ["Machine Learning", "Search", "Data Science"],
+  "locations": ["Metro City", "Remote US"],
+  "remote_allowed": true,
+  "hybrid_allowed": true,
+  "onsite_allowed": true,
+  "minimum_salary": null,
+  "seniority": ["Mid", "Senior"],
+  "employment_types": ["full-time"],
+  "preferred_companies": [],
+  "excluded_companies": [],
+  "preferred_company_types": ["technology companies"],
+  "required_keywords": [],
+  "excluded_keywords": ["unpaid"],
+  "minimum_fit_score": 0,
+  "sponsorship_requirement": "Configure in preferences.local.json",
+  "compensation": {"minimum_base_salary": null, "preferred_base_salary": null, "minimum_total_compensation": null, "salary_is_hard_filter": false, "below_minimum_penalty": 25}
+}

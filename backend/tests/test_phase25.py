@@ -1,4 +1,4 @@
-import json
+﻿import json
 from app.connectors.generic_site import extract_jsonld_jobs
 from app.connectors.smartrecruiters import SmartRecruitersConnector
 from app.connectors.workday import WorkdayConnector
@@ -38,6 +38,10 @@ def test_family_scoring_and_pm_transition():
 
 def test_hard_filter_does_not_require_search_keywords():
  role=job("Senior Data Scientist, Experimentation","Build statistical causal models and product experiments");result=JobFilterService().evaluate(role,JobPreferences(preferred_domains=["Search","Ranking","Personalization"]));assert result.passes
+
+def test_hard_filter_keeps_unknown_employment_type_neutral():
+ role=job("Research Engineer","Build retrieval and ranking systems");role.employment_type=None
+ result=JobFilterService().evaluate(role,JobPreferences(employment_types=["full-time"]));assert result.passes
 
 def test_generic_jsonld_parsing():
  payload={"@context":"https://schema.org","@type":"JobPosting","identifier":{"value":"jp-1"},"title":"AI Product Manager","description":"Lead AI platform strategy","datePosted":"2026-08-01","employmentType":"FULL_TIME","hiringOrganization":{"name":"OpenAI, Inc."},"jobLocation":{"address":{"addressLocality":"San Francisco","addressRegion":"CA"}},"baseSalary":{"currency":"USD","value":{"minValue":180000,"maxValue":220000}},"url":"/jobs/jp-1"}
@@ -97,7 +101,7 @@ def test_realistic_company_to_scored_job_discovery_smoke():
  class PublicBoardFixtureConnector:
   def fetch_jobs(self,identifier,company):
    assert identifier=="example-ai"
-   posting=job("Applied Scientist, AI Evaluation","Applied machine learning research, model evaluation, Python, experimentation, and production ML systems",company=company,source="greenhouse",external_id="live-ready-1",url="https://boards.greenhouse.io/example-ai/jobs/live-ready-1");posting.employment_type="full-time";return [posting]
+   posting=job("Applied Scientist, AI Evaluation","Applied machine learning research, model evaluation, Python, experimentation, and production ML systems",company=company,source="greenhouse",external_id="live-ready-1",url="https://boards.greenhouse.io/example-ai/jobs/live-ready-1");posting.location="Metro City";posting.employment_type="full-time";return [posting]
  detection=AtsDetector().detect("Example AI", "https://example.ai/careers", html='<a href="https://boards.greenhouse.io/example-ai">Open roles</a>')
  assert detection.detected_ats=="greenhouse" and detection.board_identifier=="example-ai"
  with SessionLocal() as db:

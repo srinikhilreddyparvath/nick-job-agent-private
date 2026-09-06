@@ -1,0 +1,28 @@
+{
+  "answers": {
+    "street_address": "100 Example Avenue",
+    "city": "Metro City",
+    "state": "Example State",
+    "state_code": "EX",
+    "postal_code": "00000",
+    "country": "United States",
+    "date_of_birth": "1990-01-01",
+    "over_18": "YES",
+    "preferred_location": "Remote US",
+    "relocation": "NO",
+    "relocation_assistance": "NO",
+    "onsite": "YES",
+    "hybrid": "YES",
+    "remote": "YES", "gender": "Male", "race": "Asian", "hispanic_latino": "Not Hispanic or Latino", "pronouns": "He/Him", "sexual_orientation": "Straight", "transgender": "Not transgender", "veteran": "I am not a protected veteran", "disability": "No, I do not have a disability",
+    "minimum_salary": "180000", "preferred_salary": "200000",
+    "salary_free_text": "Open to discussing compensation within the posted range.",
+    "travel": "Up to 100%",
+    "weekends": "NO",
+    "nonstandard_shifts": "NO",
+    "standard_weekday": "YES",
+    "drivers_license": "YES",
+    "current_employer": "Northstar Labs", "contact_current_employer": "YES", "relative_employed": "NO", "government_history": "NO", "non_compete": "NO", "criminal_history": "NO", "conflict_of_interest": "NO", "export_control_restriction": "NO", "current_arbitration": "NO", "standard_consent": "YES"
+  },
+  "work_authorization": {"authorized_us":"YES", "sponsorship_required":"YES", "current_status":"Example Work Visa", "transfer_required":"YES", "new_lottery_required":"NO", "expiration":"12/31/2030", "us_citizen":"NO", "permanent_resident":"NO"},
+  "discovery_source_preferences": ["Company Website", "Search Engine", "Other"]
+}

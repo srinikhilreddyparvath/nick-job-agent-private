@@ -18,6 +18,9 @@ from app.services.filter_service import JobFilterService
 from app.services.scoring_service import DeterministicScoringEngine
 from app.models.ingestion import JobIngestResult,JobTextIngestRequest,JobUrlIngestRequest
 from app.services.ingestion_service import JobIngestionService
+from app.services.profile_service import load_profile,load_preferences
+from app.models.opportunity import OpportunityScore
+from app.services.opportunity_service import OpportunityScoringService
 from app.connectors.base import ConnectorError
 
 router = APIRouter(prefix="/jobs", tags=["jobs"])
@@ -26,15 +29,13 @@ data_dir = Path(__file__).resolve().parents[3] / "data"
 
 
 def profile_and_preferences() -> tuple[CandidateProfile, JobPreferences]:
-    profile_path = data_dir / "profile.example.json"; preferences_path = data_dir / "job_preferences.example.json"
-    profile = CandidateProfile.model_validate_json(profile_path.read_text(encoding="utf-8")) if profile_path.exists() else CandidateProfile()
-    preferences = JobPreferences.model_validate_json(preferences_path.read_text(encoding="utf-8")) if preferences_path.exists() else JobPreferences()
-    return profile, preferences
+    return load_profile(),load_preferences()
 
 
 @router.get("", response_model=JobList)
-def list_jobs(recommendation: str | None = None,role_family:str|None=None,source:str|None=None,company:str|None=None,location:str|None=None,human_label:str|None=None, limit: int = Query(100, le=500), offset: int = 0, db: Session = Depends(get_db)):
-    return service.list(db, recommendation, limit, offset,role_family,source,company,location,human_label)
+def list_jobs(recommendation: str | None = None,role_family:str|None=None,source:str|None=None,company:str|None=None,location:str|None=None,human_label:str|None=None,view:str="diversified", limit: int = Query(100, le=500), offset: int = 0, db: Session = Depends(get_db)):
+    if view not in {"diversified","raw"}:raise HTTPException(422,"view must be diversified or raw")
+    return service.list(db, recommendation, limit, offset,role_family,source,company,location,human_label,diversified=view=="diversified")
 
 
 @router.get("/{job_id}", response_model=Job)
@@ -42,6 +43,13 @@ def get_job(job_id: int, db: Session = Depends(get_db)):
     record = service.get(db, job_id)
     if not record: raise HTTPException(404, "Job not found")
     return service.to_schema(record)
+
+
+@router.get("/{job_id}/opportunity",response_model=OpportunityScore)
+def get_opportunity(job_id:int,db:Session=Depends(get_db)):
+    record=service.get(db,job_id)
+    if not record:raise HTTPException(404,"Job not found")
+    return service.to_schema(record,load_preferences()).opportunity_score
 
 
 @router.post("/scan", response_model=ScanResult)

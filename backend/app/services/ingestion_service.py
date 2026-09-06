@@ -21,7 +21,7 @@ class JobIngestionService:
     if duplicate:self.dedupe.record_alternate(db,duplicate,job);return JobIngestResult(status="duplicate",job=self.jobs.to_schema(self.jobs.get(db,duplicate.id)),duplicate=True,message="Matched existing opening; alternate source recorded")
     record=self.jobs.create(db,job);baseline=self.baseline.evaluate(job,self.profile,self.preferences);self.jobs.save_score(db,record.id,baseline);family=self.family.score(job,self.profile,self.preferences);self.jobs.save_family_fit(db,record.id,classification,family);return JobIngestResult(status="saved",job=self.jobs.to_schema(self.jobs.get(db,record.id)),message="Job normalized, classified, saved, and scored")
  def ingest_url(self,db:Session,url:str)->JobIngestResult:
-    try:r=httpx.get(url,timeout=20,follow_redirects=True,headers={"User-Agent":"NickJobAgent/0.1"});r.raise_for_status()
+    try:r=httpx.get(url,timeout=20,follow_redirects=True,headers={"User-Agent":"CareerIntelligenceAgent/0.1"});r.raise_for_status()
     except Exception as exc:raise ConnectorError(f"job_url_fetch_failed: {exc}; use /jobs/ingest-text as fallback") from exc
     source="linkedin_reference" if "linkedin.com" in str(r.url).lower() else "manual_url";jobs=extract_jsonld_jobs(r.text,str(r.url),source=source)
     if not jobs:raise ConnectorError("no_public_structured_job_found; paste the job description via /jobs/ingest-text")

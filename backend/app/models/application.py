@@ -17,6 +17,7 @@ class ApplicationStatus(StrEnum):
     offer = "offer"
     withdrawn = "withdrawn"
     skipped = "skipped"
+    ready_to_fill="READY_TO_FILL";filling="FILLING";filled="FILLED";needs_review="NEEDS_REVIEW";ready_to_submit="READY_TO_SUBMIT";submitting="SUBMITTING";submitted="SUBMITTED";submission_unverified="SUBMISSION_UNVERIFIED";submission_failed="SUBMISSION_FAILED";submission_timeout="SUBMISSION_TIMEOUT";blocked="BLOCKED";failed="FAILED"
 
 
 class ApplicationRead(BaseModel):

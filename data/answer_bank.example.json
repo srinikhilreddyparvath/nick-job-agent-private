@@ -1,18 +1,14 @@
 {
-  "approved_structured":[
-    {"id":"WORK_AUTHORIZED_US","question":"Are you legally authorized to work in the United States?","answer":"YES","answer_type":"APPROVED_STRUCTURED","evidence_ids":[],"generation_method":"human_approved","verified":true,"requires_review":false},
-    {"id":"SPONSORSHIP_REQUIRED","question":"Will you now or in the future require employment visa sponsorship?","answer":"YES","answer_type":"APPROVED_STRUCTURED","evidence_ids":[],"generation_method":"human_approved","verified":true,"requires_review":false},
-    {"id":"H1B_CURRENT","question":"Are you currently in H-1B status?","answer":"YES","answer_type":"APPROVED_STRUCTURED","evidence_ids":[],"generation_method":"human_approved","verified":true,"requires_review":false},
-    {"id":"H1B_TRANSFER","question":"Would you require an H-1B change of employer / transfer?","answer":"YES","answer_type":"APPROVED_STRUCTURED","evidence_ids":[],"generation_method":"human_approved","verified":true,"requires_review":false},
-    {"id":"H1B_LOTTERY","question":"Do you require a new H-1B lottery / cap selection?","answer":"NO","answer_type":"APPROVED_STRUCTURED","evidence_ids":[],"generation_method":"human_approved","verified":true,"requires_review":false},
-    {"id":"H1B_EXPLANATION","question":"Please explain your current work authorization.","answer":"Currently authorized to work in the United States in H-1B status and would require an H-1B change-of-employer petition. No new H-1B cap lottery is required.","answer_type":"APPROVED_STRUCTURED","evidence_ids":[],"generation_method":"human_approved","verified":true,"requires_review":false}
+  "approved_structured": [
+    {"id":"DISCOVERY_SOURCE_GENERIC","question":"How did you hear about us?","answer":"Company website","answer_type":"APPROVED_STRUCTURED","evidence_ids":[],"generation_method":"example_only","verified":true,"requires_review":false,"answer_category":"DISCOVERY_SOURCE","scope":"REUSABLE","approval_source":"EXAMPLE_PROFILE"},
+    {"id":"PROFESSIONAL_MOTIVATION","question":"What motivates you professionally?","answer":"I am motivated by turning careful research and evaluation into useful, reliable products.","answer_type":"APPROVED_STRUCTURED","evidence_ids":[],"generation_method":"example_only","verified":true,"requires_review":false,"answer_category":"PROFESSIONAL_MOTIVATION","scope":"REUSABLE","approval_source":"EXAMPLE_PROFILE"}
   ],
-  "evidence_generated":[
+  "evidence_generated": [
     {"id":"WHY_ROLE","question":"Why this role?","answer":null,"answer_type":"EVIDENCE_GENERATED","evidence_ids":[],"generation_method":"not_generated","verified":false,"requires_review":true},
     {"id":"RELEVANT_EXPERIENCE","question":"Describe relevant experience.","answer":null,"answer_type":"EVIDENCE_GENERATED","evidence_ids":[],"generation_method":"not_generated","verified":false,"requires_review":true}
   ],
-  "human_review_required":[
+  "human_review_required": [
     {"id":"UNUSUAL_LEGAL","question":"Unusual or materially different legal attestation","answer":null,"answer_type":"HUMAN_REVIEW_REQUIRED","evidence_ids":[],"generation_method":"human_only","verified":false,"requires_review":true},
-    {"id":"SENSITIVE_OR_MISSING","question":"Demographic, disability, veteran, conflicts, unusual compensation, or missing profile information","answer":null,"answer_type":"HUMAN_REVIEW_REQUIRED","evidence_ids":[],"generation_method":"human_only","verified":false,"requires_review":true}
+    {"id":"SENSITIVE_OR_MISSING","question":"Sensitive or missing profile information","answer":null,"answer_type":"HUMAN_REVIEW_REQUIRED","evidence_ids":[],"generation_method":"human_only","verified":false,"requires_review":true}
   ]
 }

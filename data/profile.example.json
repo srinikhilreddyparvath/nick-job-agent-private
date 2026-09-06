@@ -1,27 +1,28 @@
 {
-  "identity": {"legal_first_name":"Srinikhil Reddy","legal_last_name":"Parvath","preferred_first_name":"Nick","preferred_professional_name":"Nick Parvath","display_name":"Nick Parvath","email":"tonickred@gmail.com","phone":"+1 (612) 447-3136","location":"Bay Area, CA","portfolio_url":"https://nikhil-portfolio-ecru-eight.vercel.app/","linkedin_url":"https://www.linkedin.com/in/srinikhil-reddy-parvath-42aa46273/","evidence_ids":["IDENTITY_001","IDENTITY_002","IDENTITY_003","IDENTITY_004"]},
-  "professional_summary":{"value":"Research-driven Machine Learning and Data Science professional specializing in large-scale search, information retrieval, ranking, relevance, semantic understanding, and search evaluation.","details":{},"evidence_ids":["SUMMARY_001"]},
-  "roles":[
-    {"value":"Data Scientist - AdTech, Search and Personalization","details":{"company":"Walmart Global Tech","location":"Bay Area, CA"},"evidence_ids":["WALMART_001"]},
-    {"value":"AI/ML and IoT Engineer","details":{"company":"Volvo Group","location":"Boston, MA"},"evidence_ids":["VOLVO_001"]},
-    {"value":"Automation Engineer","details":{"company":"Cisco","location":"Bangalore, India"},"evidence_ids":["CISCO_001"]}
+  "identity": {
+    "legal_first_name": "Alex",
+    "legal_last_name": "Morgan",
+    "preferred_first_name": "Alex",
+    "preferred_professional_name": "Alex Morgan",
+    "display_name": "Alex Morgan",
+    "email": "alex.morgan@example.com",
+    "phone": "+1 (555) 010-0142",
+    "location": "Metro City, USA",
+    "portfolio_url": "https://example.com/portfolio",
+    "linkedin_url": "https://www.linkedin.com/in/example-profile",
+    "evidence_ids": ["IDENTITY_001", "IDENTITY_002", "IDENTITY_003", "IDENTITY_004"]
+  },
+  "professional_summary": {"value": "Machine-learning engineer focused on search quality, evaluation, and reliable data products.", "details": {}, "evidence_ids": ["SUMMARY_001"]},
+  "roles": [{"value": "Machine Learning Engineer", "details": {"company": "Northstar Labs", "location": "Metro City, USA"}, "evidence_ids": ["EXPERIENCE_001"]}],
+  "experience": [{"value": "Northstar Labs", "details": {"role": "Machine Learning Engineer"}, "evidence_ids": ["EXPERIENCE_001", "EXPERIENCE_002"]}],
+  "education": [{"value": "Master of Science in Computer Science", "details": {"institution": "Example University"}, "evidence_ids": ["EDUCATION_001"]}],
+  "skills": [
+    {"value": "Python", "evidence_ids": ["SKILLS_004"]},
+    {"value": "SQL", "evidence_ids": ["SKILLS_004"]},
+    {"value": "Information Retrieval", "evidence_ids": ["SKILLS_001"]},
+    {"value": "Experiment Design", "evidence_ids": ["SKILLS_005"]}
   ],
-  "experience":[
-    {"value":"Walmart Global Tech","details":{"role":"Data Scientist - AdTech, Search and Personalization"},"evidence_ids":["WALMART_001","WALMART_002","WALMART_003","WALMART_004","WALMART_005","WALMART_006","WALMART_007","WALMART_008","WALMART_009","WALMART_010"]},
-    {"value":"Volvo Group","details":{"role":"AI/ML and IoT Engineer"},"evidence_ids":["VOLVO_001","VOLVO_002","VOLVO_003","VOLVO_004","VOLVO_005","VOLVO_006","VOLVO_007"]},
-    {"value":"Cisco","details":{"role":"Automation Engineer"},"evidence_ids":["CISCO_001","CISCO_002","CISCO_003","CISCO_004"]}
-  ],
-  "education":[
-    {"value":"Master of Science in Engineering Management","details":{"institution":"Northeastern University","location":"Boston, MA","major":"Mathematical Modeling, LLM Modeling, Product Management"},"evidence_ids":["EDUCATION_001"]},
-    {"value":"Bachelor of Technology in Electronics and Communication Engineering","details":{"institution":"RV College of Engineering","location":"Bangalore, India"},"evidence_ids":["EDUCATION_002"]}
-  ],
-  "skills":[
-    {"value":"Information Retrieval","evidence_ids":["SKILLS_001"]},{"value":"Ranking","evidence_ids":["SKILLS_001"]},{"value":"Semantic Search","evidence_ids":["SKILLS_001"]},{"value":"Relevance Modeling","evidence_ids":["SKILLS_001"]},{"value":"Personalization","evidence_ids":["SKILLS_001"]},{"value":"Recommendation Systems","evidence_ids":["SKILLS_001"]},{"value":"Cold-Start Retrieval","evidence_ids":["SKILLS_001"]},{"value":"Human Evaluation","evidence_ids":["SKILLS_002"]},{"value":"A/B Testing","evidence_ids":["SKILLS_002"]},{"value":"Python","evidence_ids":["SKILLS_004"]},{"value":"SQL","evidence_ids":["SKILLS_004"]},{"value":"PySpark","evidence_ids":["SKILLS_004"]},{"value":"PyTorch","evidence_ids":["SKILLS_004"]},{"value":"TensorFlow","evidence_ids":["SKILLS_004"]},{"value":"Databricks","evidence_ids":["SKILLS_004"]},{"value":"Docker","evidence_ids":["SKILLS_004"]},{"value":"Kubernetes","evidence_ids":["SKILLS_004"]}
-  ],
-  "research":[{"value":"MESA-RLSP: Multi-Modal Evidence Sequencing Allocation with Reinforcement Feedback and Surface Priors for Cold-Start Personalization","details":{"type":"Research Paper"},"evidence_ids":["RESEARCH_001","RESEARCH_002"]}],
-  "publications":[],
-  "patents":[{"value":"Cart Checkout Optimization via Price Gap-Aware Product Recommendation & Dynamic Threshold Modeling","details":{"status":"Patent Pending"},"evidence_ids":["PATENT_001","PATENT_002"]}],
-  "projects":[{"value":"Flowlane initiative","details":{"company":"Volvo Group"},"evidence_ids":["VOLVO_001","VOLVO_002"]}],
-  "technical_domains":[{"value":"Applied AI","evidence_ids":["SUMMARY_001"]},{"value":"Machine Learning","evidence_ids":["SKILLS_003"]},{"value":"Search","evidence_ids":["SUMMARY_001"]},{"value":"Information Retrieval","evidence_ids":["SKILLS_001"]},{"value":"Ranking","evidence_ids":["SKILLS_001"]},{"value":"Search Evaluation","evidence_ids":["WALMART_004"]},{"value":"Reinforcement Learning","evidence_ids":["SKILLS_003"]},{"value":"Generative AI","evidence_ids":["SKILLS_003"]},{"value":"Agentic AI","evidence_ids":["SKILLS_003"]},{"value":"Industrial AI","evidence_ids":["VOLVO_001"]},{"value":"IoT","evidence_ids":["VOLVO_001"]}],
-  "leadership":[{"value":"Research problem framing, technical strategy, cross-functional leadership, experiment design, stakeholder alignment, launch planning, and technical communication","evidence_ids":["SKILLS_005"]}]
+  "research": [], "publications": [], "patents": [], "projects": [],
+  "technical_domains": [{"value": "Search", "evidence_ids": ["SKILLS_001"]}],
+  "leadership": [{"value": "Cross-functional technical communication", "evidence_ids": ["SKILLS_005"]}]
 }

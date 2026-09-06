@@ -22,7 +22,9 @@ class JobFilterService:
         if any(item.lower() in text for item in preferences.excluded_keywords): reasons.append("excluded keyword")
         if job.remote_type == RemoteType.remote and not preferences.remote_allowed: reasons.append("remote roles disabled")
         if job.remote_type == RemoteType.hybrid and not preferences.hybrid_allowed: reasons.append("hybrid roles disabled")
-        if preferences.locations and job.remote_type != RemoteType.remote and not any(item.lower() in (job.location or "").lower() for item in preferences.locations): reasons.append("location outside configured list")
-        if preferences.employment_types and not any(item.lower() == (job.employment_type or "").lower() for item in preferences.employment_types): reasons.append("employment type not allowed")
+        if job.remote_type == RemoteType.onsite and not preferences.onsite_allowed: reasons.append("onsite roles disabled")
+        configured_locations=preferences.locations+preferences.commutable_locations
+        if configured_locations and job.remote_type != RemoteType.remote and not any(item.lower() in (job.location or "").lower() for item in configured_locations): reasons.append("location outside configured list")
+        if preferences.employment_types and job.employment_type and not any(item.lower() == job.employment_type.lower() for item in preferences.employment_types): reasons.append("employment type not allowed")
         if preferences.minimum_salary is not None and job.salary_max is not None and job.salary_max < preferences.minimum_salary: reasons.append("salary below minimum")
         return FilterResult(passes=not reasons, reasons=reasons)

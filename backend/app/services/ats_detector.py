@@ -10,7 +10,7 @@ class AtsDetector:
     detected_urls=[]
     if html is None:
       try:
-        response=httpx.get(careers_url,timeout=15,follow_redirects=True,headers={"User-Agent":"NickJobAgent/0.1"}); response.raise_for_status(); html=response.text; final_url=str(response.url)
+        response=httpx.get(careers_url,timeout=15,follow_redirects=True,headers={"User-Agent":"CareerIntelligenceAgent/0.1"}); response.raise_for_status(); html=response.text; final_url=str(response.url)
       except Exception as exc:
         return AtsDetectionResult(detected_ats="unknown",confidence=0,board_identifier=None,reasons=[f"Careers page could not be inspected: {exc}"],recommended_source_configuration={"company":company,"ats_type":"generic_company_site","board_identifier":careers_url,"careers_url":careers_url})
     haystack=" ".join([careers_url,final_url or "",html or ""])

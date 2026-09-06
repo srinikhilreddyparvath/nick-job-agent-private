@@ -29,18 +29,18 @@ class HashEmbeddingProvider(EmbeddingProvider):
         return output
 class OpenAIEmbeddingProvider(EmbeddingProvider):
     name="openai"
-    def __init__(self,model,api_key=None,timeout=45):self.model=model;self.api_key=api_key or os.getenv("OPENAI_API_KEY");self.timeout=timeout
+    def __init__(self,model,api_key=None,timeout=45):self.model=model;self.api_key=api_key or os.getenv("OPENAI_API_KEY");self.timeout=timeout;self.last_input_tokens=0
     def embed_batch(self,texts):
         if not self.api_key:raise EmbeddingError("OPENAI_API_KEY is not configured")
-        response=httpx.post("https://api.openai.com/v1/embeddings",headers={"Authorization":f"Bearer {self.api_key}"},json={"model":self.model,"input":texts},timeout=self.timeout);response.raise_for_status();return [item["embedding"] for item in sorted(response.json()["data"],key=lambda x:x["index"])]
+        response=httpx.post("https://api.openai.com/v1/embeddings",headers={"Authorization":f"Bearer {self.api_key}"},json={"model":self.model,"input":texts},timeout=self.timeout);response.raise_for_status();data=response.json();self.last_input_tokens=(data.get("usage") or {}).get("prompt_tokens",(data.get("usage") or {}).get("total_tokens",0));return [item["embedding"] for item in sorted(data["data"],key=lambda x:x["index"])]
 class EmbeddingService:
-    def __init__(self,provider:EmbeddingProvider):self.provider=provider
+    def __init__(self,provider:EmbeddingProvider,settings:Settings|None=None):self.provider=provider;self.settings=settings or get_settings();self.last_input_tokens=0;self.last_estimated_cost=0
     def embed_batch(self,texts:list[str])->list[EmbeddingVector]:
-        vectors=self.provider.embed_batch(texts);now=datetime.now(timezone.utc);version=f"{self.provider.name}:{self.provider.model}:v1"
+        vectors=self.provider.embed_batch(texts);self.last_input_tokens=getattr(self.provider,"last_input_tokens",0);self.last_estimated_cost=round(self.last_input_tokens*self.settings.embedding_cost_per_million/1_000_000,8);now=datetime.now(timezone.utc);version=f"{self.provider.name}:{self.provider.model}:v1"
         return [EmbeddingVector(vector=x,provider=self.provider.name,model=self.provider.model,embedding_version=version,generated_at=now) for x in vectors]
     def embed_text(self,text:str)->EmbeddingVector:return self.embed_batch([text])[0]
 def configured_embedding_service(settings:Settings|None=None)->EmbeddingService:
     settings=settings or get_settings();provider=settings.embedding_provider or "mock"
-    if provider in {"mock","local","hash"}:return EmbeddingService(HashEmbeddingProvider(settings.embedding_model or "hash-embedding-v1"))
-    if provider=="openai":return EmbeddingService(OpenAIEmbeddingProvider(settings.embedding_model,timeout=settings.llm_timeout_seconds))
+    if provider in {"mock","local","hash"}:return EmbeddingService(HashEmbeddingProvider(settings.embedding_model or "hash-embedding-v1"),settings)
+    if provider=="openai":return EmbeddingService(OpenAIEmbeddingProvider(settings.embedding_model,api_key=settings.openai_api_key.get_secret_value() if settings.openai_api_key else None,timeout=settings.llm_timeout_seconds),settings)
     raise EmbeddingError(f"Unsupported embedding provider: {provider}")

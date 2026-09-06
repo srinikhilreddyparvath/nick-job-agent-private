@@ -58,6 +58,11 @@ class EvidenceRecord(BaseModel):
     domains: list[str] = Field(default_factory=list)
     verified: bool = True
     confidence: float = Field(default=1.0, ge=0, le=1)
+    source_type: str | None = None
+    source_document: str | None = None
+    source_section: str | None = None
+    supporting_text: str | None = None
+    user_edited: bool = False
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
@@ -114,3 +119,14 @@ class JobPreferences(BaseModel):
     minimum_fit_score: float = 0
     sponsorship_requirement: str | None = None
     compensation: CompensationPreferences = Field(default_factory=CompensationPreferences)
+    commutable_locations: list[str] = Field(default_factory=list)
+    relocation_willing: bool | None = None
+    work_authorization: str | None = None
+    sponsorship_required: bool | None = None
+
+
+class CandidateApplicationPolicy(BaseModel):
+    """User-owned application facts kept outside the public source tree."""
+    answers: dict[str, Any] = Field(default_factory=dict)
+    work_authorization: dict[str, str] = Field(default_factory=dict)
+    discovery_source_preferences: list[str] = Field(default_factory=lambda: ["LinkedIn", "Social Media", "Search Engine", "Company Website", "Other"])
