@@ -1,119 +1,297 @@
-# Career Intelligence Agent
+<div align="center">
 
-An open-source, local-first personal job-search agent that continuously discovers jobs worth your time, evaluates them against verified experience and configured constraints, explains the evidence behind each match, distinguishes real gaps from wording gaps, and recommends the next useful action.
+[![Career Agent](docs/readme-hero.svg)](docs/Final_Career_Agent_Overview.html)
 
-Application preparation and ATS browser automation are preserved as an **experimental, optional subsystem**. Fit controls priority—not permission—and nothing submits unless the configured submission safeguards allow it.
+# Career Agent
 
-> **Safety default:** `APPLICATION_MODE=manual` and `AUTO_SUBMIT_ENABLED=false`.
+### Automate the search. Not the ambition.
 
-## Product tour
+**Upload your resume, tell Career Agent what you want, and use it to find, rank, and understand the jobs worth your attention.**
 
-<!-- TODO: add public screenshots after sanitizing demo data. -->
+![Local-first](https://img.shields.io/badge/LOCAL--FIRST-76E8ED?style=for-the-badge&labelColor=0B1118&color=76E8ED)
+![Open source](https://img.shields.io/badge/OPEN--SOURCE-AFA0F7?style=for-the-badge&labelColor=0B1118&color=AFA0F7)
+![Human controlled](https://img.shields.io/badge/HUMAN--CONTROLLED-9BDFB7?style=for-the-badge&labelColor=0B1118&color=9BDFB7)
 
-- Landing and guided local onboarding
-- “Jobs worth your attention” opportunity dashboard
-- Evidence-grounded match reasons and typed gaps
-- Constraint-aware recommendations: `APPLY_NOW`, `APPLY`, `CONTACT_FIRST`, `STRETCH`, `SKIP`
-- Local market insights and saved-opportunity pipeline
-- Company and role research with source citations
-- Evidence-grounded application packages and tailored resumes
-- Experimental Ashby/Greenhouse/Lever form inspection and controlled filling
-- Durable submission state, receipts, duplicate protection, and uncertainty lockout
+</div>
 
-## How it works
+---
+
+## What is Career Agent?
+
+Job searching still involves a lot of repetitive work: checking career pages, opening dozens of roles, comparing requirements, remembering what you already looked at, and deciding which opportunities are actually worth your time.
+
+Career Agent is being built to handle that repetitive layer for you.
+
+You give it your **resume** and **career preferences**. It turns your experience into a structured profile, discovers job openings from supported public company sources, removes duplicates, checks your constraints, scores fit, and explains **why** a role may or may not be worth pursuing.
+
+The goal is not to apply to everything.
+
+The goal is to help you spend your attention on the right opportunities.
+
+> **Career Agent recommends. You decide.** Application automation is experimental, optional, and disabled by default.
+
+---
+
+## The experience
 
 ```text
-private profile + preferences
-              ↓
-public job discovery → normalize → deduplicate → classify
-              ↓
-deterministic + semantic fit → constraints → opportunity score
-              ↓
-evidence-backed explanation → gaps → recommended next action
-              ↓
-optional application preparation / experimental ATS automation
+Upload resume
+      ↓
+Review your extracted experience
+      ↓
+Set roles, locations, compensation, work mode, and other preferences
+      ↓
+Find Jobs
+      ↓
+Discover → normalize → deduplicate → filter
+      ↓
+Deterministic fit + bounded AI analysis
+      ↓
+OpportunityScore + evidence + gaps
+      ↓
+Jobs worth your attention
+      ↓
+Save, research, prepare, or skip
 ```
 
-See [ARCHITECTURE.md](ARCHITECTURE.md) for component boundaries.
+Instead of showing another giant job feed, Career Agent is designed to answer four questions:
+
+1. **Is this role actually relevant to me?**
+2. **What evidence from my experience supports the match?**
+3. **What is genuinely missing or still unclear?**
+4. **What should I do next?**
+
+---
+
+## Why the matching is different
+
+Career Agent does not treat a resume as a bag of keywords.
+
+It keeps a structured record of the candidate's real experience and connects job requirements back to supporting evidence. It also keeps different kinds of gaps separate:
+
+- an actual experience gap,
+- an evidence or wording gap,
+- or something the job posting simply does not make clear.
+
+Your real-world constraints matter too. Location, work arrangement, compensation, seniority, relocation, employment type, work authorization, and sponsorship preferences can change the recommendation even when the technical match is strong.
+
+The final score is an **opportunity-ranking signal**, not a prediction of whether a company will hire you.
+
+---
+
+## Current checkpoint
+
+This private repository is a **P1 browser-test checkpoint**, not the final public release.
+
+### Working now
+
+| Capability | Status |
+|---|---|
+| Resume upload: PDF, DOCX, TXT | Working |
+| AI-assisted profile and evidence extraction | Working, with one real-world extraction edge case being hardened |
+| Human review and editing before approval | Working |
+| Career preferences and constraints | Working |
+| Public company-source ingestion | Working |
+| Job normalization and deduplication | Working |
+| Deterministic fit scoring | Working |
+| Bounded semantic/AI fit analysis | Working |
+| Constraint-aware recommendations | Working |
+| OpportunityScore and global ranking | Working |
+| Ranked dashboard and job detail analysis | Working |
+| Saved opportunities and supporting research flows | Working |
+
+### Being finished before the public release
+
+- reliable retry/error handling for the resume-extraction edge case found during browser testing,
+- a true fresh-user/reset experience with no leftover development state,
+- zero-config **diversified multi-company discovery** so Find Jobs does not depend on manually choosing a company first,
+- final browser validation of the complete new-user journey.
+
+### Experimental
+
+Application preparation and ATS browser automation are intentionally secondary. They remain human-reviewed and disabled by default.
+
+```text
+APPLICATION_MODE=manual
+AUTO_SUBMIT_ENABLED=false
+```
+
+Career Agent never needs automatic submission in order to deliver its core value.
+
+---
+
+## Product overview
+
+The repository includes a full interactive product concept with the intended experience, architecture diagrams, evidence-matching examples, opportunity views, and roadmap.
+
+### [Open the Career Agent product overview →](docs/Final_Career_Agent_Overview.html)
+
+The overview uses **fictional companies and sample data**. GitHub displays repository HTML as a file rather than running it as a website; for the full interactive version, download `docs/Final_Career_Agent_Overview.html` and open it in a browser.
+
+The image at the top of this README links to the same overview.
+
+---
+
+## How Find Jobs works
+
+Career Agent separates cheap, deterministic work from expensive AI analysis.
+
+```text
+public job sources
+      ↓
+normalize + deduplicate
+      ↓
+constraints + deterministic fit
+      ↓
+rank promising candidates
+      ↓
+bounded semantic analysis
+      ↓
+OpportunityScore
+      ↓
+ranked recommendations
+```
+
+The system does **not** send every discovered job to an LLM. Only a bounded, higher-priority subset is eligible for semantic analysis.
+
+Current default:
+
+```text
+LLM_MAX_SEMANTIC_ANALYSES_PER_SCAN=10
+```
+
+When semantic fit is available, OpportunityScore combines deterministic and semantic fit and then applies freshness. If AI analysis is unavailable or fails, the job can still be ranked from deterministic signals rather than being automatically penalized.
+
+---
 
 ## Quick start
 
-1. Copy the environment template and configure an optional LLM provider:
+### 1. Configure the backend
 
-   ```powershell
-   Copy-Item backend/.env.example backend/.env
-   ```
+```powershell
+Copy-Item backend/.env.example backend/.env
+```
 
-2. Start the stack:
+Configure a supported LLM provider if you want AI resume extraction and semantic analysis. Keep API keys only in environment variables.
 
-   ```bash
-   docker compose up -d --build
-   ```
+### 2. Start Career Agent
 
-3. Open `http://localhost:3000/onboarding`, upload a PDF, DOCX, or TXT resume,
-   review every extracted claim, configure job preferences, and approve. The
-   application creates the ignored `profile.local.json`, `evidence.local.json`,
-   and `preferences.local.json` files for you.
+```bash
+docker compose up -d --build
+```
 
-The project has no built-in authentication. Treat any public deployment accordingly and read [SECURITY.md](SECURITY.md) and [PRIVACY.md](PRIVACY.md).
+### 3. Open onboarding
 
-## Configuration
+```text
+http://localhost:3000/onboarding
+```
 
-The backend uses environment variables documented in `backend/.env.example`, including:
+Upload a PDF, DOCX, or TXT resume, review the extracted profile, set your preferences, and approve it before using the job-intelligence workflow.
 
-- `DATABASE_URL`
-- `LLM_ENABLED`, `LLM_PROVIDER`, `LLM_MODEL`, `OPENAI_API_KEY`
-- candidate `*_PATH` settings pointing to ignored local files
-- `APPLICATION_MODE=manual`
-- `AUTO_SUBMIT_ENABLED=false`
+---
 
-Tests use fictional fixtures and mock providers. No real API key is required.
+## Local-first and private by design
 
-## AI providers
+Candidate-generated files are kept out of Git history. Real resumes, profiles, evidence, preferences, application artifacts, screenshots, and other private runtime state should remain ignored.
 
-Deterministic discovery and scoring work without an LLM. Optional semantic analysis, research, and application drafting support configured providers. OpenAI Structured Outputs are schema-constrained, bounded, and cost-tracked. Keep keys in environment variables only.
+Tracked examples and automated-test fixtures must be fictional.
 
-After onboarding, **Find Jobs** scans enabled public company sources in a background worker, scores every normalized job deterministically, and sends only the highest-priority bounded subset to semantic analysis. The default budget is `LLM_MAX_SEMANTIC_ANALYSES_PER_SCAN=10`. When semantic fit exists, OpportunityScore blends 45% deterministic fit with 55% semantic fit, then applies freshness; missing or failed AI analysis falls back to deterministic scoring without a penalty. The API globally ranks the complete result set before pagination.
+"Local-first" does **not** mean every operation is offline. If you configure a hosted AI provider, the content needed for that AI request is sent to that provider.
 
-## Privacy and local-first data
+This project currently has no built-in multi-user authentication layer. Do not expose a local instance publicly without adding the appropriate security boundary.
 
-Tracked `data/*.example.json` files are fictional. Real profiles, policies, evidence, resumes, databases, artifacts, screenshots, and browser state are ignored. The runtime prefers `*.local.json` and falls back to examples for a safe first launch.
+See [PRIVACY.md](PRIVACY.md) and [SECURITY.md](SECURITY.md).
 
-## ATS support status
+---
 
-| ATS | Discovery | Application automation |
-|---|---:|---|
-| Ashby | Supported | Real inspection/fill/control path validated; experimental |
-| Greenhouse | Supported | Fixture-tested; experimental |
-| Lever | Supported | Fixture-tested; experimental |
-| Workday | Discovery support | Submission not validated |
-| Generic/custom | Best effort | Per-site validation required |
+## Architecture
 
-Browser automation never bypasses CAPTCHA, authentication, access controls, or anti-bot protection. Authenticated LinkedIn automation is prohibited.
+The current stack is intentionally straightforward:
+
+- **Next.js + React** — onboarding and the opportunity workspace
+- **FastAPI** — API and orchestration
+- **PostgreSQL** — jobs, analyses, research, and durable task state
+- **Worker + scheduler** — discovery and background career-intelligence runs
+- **LLM service abstraction** — structured resume extraction, semantic fit, research, and drafting where enabled
+- **Playwright** — browser/UI regression testing and experimental ATS workflows
+
+For the deeper component view, see [ARCHITECTURE.md](ARCHITECTURE.md).
+
+---
+
+## Supported job-source direction
+
+Career Agent uses adapters for public career systems rather than trying to scrape the entire web blindly.
+
+Current source support includes:
+
+| Source type | Discovery |
+|---|---|
+| Greenhouse | Supported |
+| Ashby | Supported |
+| Lever | Supported |
+| SmartRecruiters | Supported |
+| Workday | Supported / site-dependent |
+| Generic public career pages | Best effort |
+| Manually supplied career URL | Supported |
+
+The next discovery pass focuses on using these adapters across a diversified starter universe of employers so a new user can click **Find Jobs** without first knowing which companies to add.
+
+---
+
+## Safety philosophy
+
+Career Agent is intentionally conservative around applications:
+
+- no CAPTCHA bypass,
+- no access-control bypass,
+- no authenticated LinkedIn automation,
+- no fabricated candidate experience,
+- no silent submission retries after an uncertain external submission state,
+- no automatic submission by default.
+
+Fit determines **priority**, not permission.
+
+---
 
 ## Development
+
+Backend:
 
 ```bash
 cd backend
 python -m pytest -q
 python -m compileall -q app tests
+```
 
-cd ../frontend
+Frontend:
+
+```bash
+cd frontend
 npm install
 npm run lint
 npm run build
 ```
 
+---
+
 ## Roadmap
 
-- Improve public contact intelligence using verified public sources
-- Add outcome calibration without overstating small samples
-- Validate more ATS application flows independently
-- Expand opportunity-set and skill-demand insights
+Near-term work is focused on making the core promise boringly reliable:
+
+**Resume → Preferences → Find Jobs → Analyze → Rank → Explain → Decide**
+
+After that, the broader roadmap includes contact intelligence from verified public sources, posting-change intelligence, richer market insights, more source adapters, local-model support, and carefully controlled application workflows.
+
+---
 
 ## Contributing
 
-Read [CONTRIBUTING.md](CONTRIBUTING.md). Never include real candidate data or live application payloads in issues, fixtures, commits, or screenshots.
+See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+Never commit real candidate information, API keys, live application payloads, private screenshots, or other personal runtime data.
+
+---
 
 ## License
 
