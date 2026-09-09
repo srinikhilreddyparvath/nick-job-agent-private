@@ -8,9 +8,16 @@ from app.core.config import get_settings
 
 class EvidenceService:
     """Canonical verified evidence retrieval with deterministic and optional semantic paths."""
-    def __init__(self,path:Path|None=None):
+    def __init__(self,path:Path|None=None,records=None):
+        from app.services.candidate_context_service import read_bundle
+        bundle = read_bundle() if path is None and records is None else None
         self.path=path or _configured_path(get_settings().candidate_evidence_path,"evidence.example.json")
         self._records=[EvidenceRecord.model_validate(x) for x in json.loads(self.path.read_text(encoding="utf-8"))] if self.path.exists() else []
+        if bundle:
+            self._records=[EvidenceRecord.model_validate(x) for x in bundle["evidence"]
+                           if x.get("candidate_profile_id") == bundle["profile"].get("candidate_profile_id")
+                           and x.get("candidate_profile_version") == bundle["profile"].get("profile_version")]
+        if records is not None: self._records=list(records)
     def get_by_id(self,evidence_id:str)->EvidenceRecord|None: return next((x for x in self._records if x.id==evidence_id),None)
     def all(self)->list[EvidenceRecord]:return list(self._records)
     def search(self,*,company:str|None=None,domains:list[str]|None=None,skills:list[str]|None=None,category:str|None=None,role:str|None=None,text_query:str|None=None)->list[EvidenceRecord]:

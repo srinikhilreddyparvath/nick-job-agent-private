@@ -1,6 +1,6 @@
 # Production deployment
 
-Career Intelligence Agent is designed as four independently restartable components backed by PostgreSQL and persistent artifact storage:
+RoleCall is designed as four independently restartable components backed by PostgreSQL and persistent artifact storage:
 
 - `api`: FastAPI web/API service
 - `worker`: long-running application queue consumer with database leases

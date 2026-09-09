@@ -19,7 +19,8 @@ class ResumeRenderer:
     def __init__(self,root:Path|None=None):
         self.root=root or Path(__file__).resolve().parents[3]/"generated"/"applications"
     def render(self,job_id:int,resume:TailoredResumeData)->Path:
-        folder=self.root/str(job_id);folder.mkdir(parents=True,exist_ok=True)
+        from app.services.candidate_context_service import current_context
+        folder=self.root/current_context().key/str(job_id);folder.mkdir(parents=True,exist_ok=True)
         filename=f"{safe_filename(resume.professional_name)}-{safe_filename(resume.target_company)}-{safe_filename(resume.target_role)}-Resume.pdf";path=folder/filename
         styles=getSampleStyleSheet();styles.add(ParagraphStyle(name="Name",parent=styles["Title"],fontName="Helvetica-Bold",fontSize=18,leading=21,alignment=TA_CENTER,spaceAfter=4));styles.add(ParagraphStyle(name="Contact",parent=styles["Normal"],fontSize=8.5,leading=11,alignment=TA_CENTER,textColor=colors.HexColor("#263447")));styles.add(ParagraphStyle(name="Section",parent=styles["Heading2"],fontName="Helvetica-Bold",fontSize=10,leading=12,spaceBefore=8,spaceAfter=4,textColor=colors.HexColor("#12243a"),borderWidth=0,borderPadding=0));styles.add(ParagraphStyle(name="BodySmall",parent=styles["BodyText"],fontSize=8.7,leading=11.2,spaceAfter=2));styles.add(ParagraphStyle(name="Role",parent=styles["BodyText"],fontName="Helvetica-Bold",fontSize=9.2,leading=11,spaceBefore=4,spaceAfter=2))
         doc=SimpleDocTemplate(str(path),pagesize=letter,rightMargin=.62*inch,leftMargin=.62*inch,topMargin=.48*inch,bottomMargin=.48*inch,title=f"{resume.professional_name} - {resume.target_role}",author=resume.professional_name)

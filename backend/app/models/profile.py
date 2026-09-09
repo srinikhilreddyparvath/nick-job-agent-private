@@ -47,6 +47,8 @@ class Identity(BaseModel):
 
 class EvidenceRecord(BaseModel):
     id: str
+    candidate_profile_id: str | None = None
+    candidate_profile_version: int | None = None
     category: str
     sub_category: str
     statement: str
@@ -63,6 +65,7 @@ class EvidenceRecord(BaseModel):
     source_section: str | None = None
     supporting_text: str | None = None
     user_edited: bool = False
+    verification_state: str = "VERIFIED_FROM_RESUME"
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
@@ -76,6 +79,10 @@ class CompensationPreferences(BaseModel):
 
 
 class CandidateProfile(BaseModel):
+    candidate_profile_id: str | None = None
+    profile_version: int = 0
+    approved_at: datetime | None = None
+    source_document_id: str | None = None
     identity: Identity = Field(default_factory=Identity)
     professional_summary: ProfileItem | None = None
     roles: list[ProfileItem] = Field(default_factory=list)
@@ -101,6 +108,9 @@ class CandidateProfile(BaseModel):
 
 
 class JobPreferences(BaseModel):
+    version: int = 0
+    provenance: str = "inferred"
+    reviewed_at: datetime | None = None
     preferred_titles: list[str] = Field(default_factory=list)
     excluded_titles: list[str] = Field(default_factory=list)
     preferred_domains: list[str] = Field(default_factory=list)

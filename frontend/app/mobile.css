@@ -1,5 +1,5 @@
 @media(max-width:1000px){
-  .sidebar{flex-wrap:wrap}
-  .sidebar nav{display:flex;width:100%;gap:4px;margin-top:12px;overflow-x:auto}
+  .sidebar{min-width:0;max-width:100%;flex-wrap:wrap}
+  .sidebar nav{display:flex;width:100%;min-width:0;max-width:100%;gap:4px;margin-top:12px;overflow-x:auto}
   .sidebar nav a{white-space:nowrap}
 }

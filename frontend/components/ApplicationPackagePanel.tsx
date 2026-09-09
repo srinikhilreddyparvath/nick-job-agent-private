@@ -4,7 +4,7 @@ import {useState} from "react";
 import {API_URL} from "@/lib/api";
 import {apiFetch} from "@/lib/client-api";
 import {ApplicationPackage} from "@/lib/types";
-const defaultQuestions=["Why are you interested in this role?","What experience makes you a strong fit?","Describe your experience with search, retrieval, or ranking.","Describe a technically difficult ML problem you worked on.","Will you now or in the future require employment visa sponsorship?"];
+const defaultQuestions=["Why are you interested in this role?","What experience makes you a strong fit?","Describe work that is most relevant to the role's key responsibilities.","Describe a difficult problem you solved and how you approached it.","Will you now or in the future require employment visa sponsorship?"];
 export default function ApplicationPackagePanel({jobId,initialPackage}:{jobId:number;initialPackage:ApplicationPackage|null}){
  const [pkg,setPkg]=useState(initialPackage);const [questions,setQuestions]=useState(defaultQuestions.join("\n"));const [status,setStatus]=useState("");
  async function build(force=false){setStatus("Generating grounded draft...");const items=questions.split("\n").map(x=>x.trim()).filter(Boolean).map(question_text=>({question_text,required:true,answer_length:"MEDIUM",source:"manual"}));const response=await apiFetch(`/jobs/${jobId}/application-package${force?"/regenerate":""}`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({questions:items,force,cover_letter_requested:false,resume_pages:2})});const body=await response.json();if(body.package)setPkg(body.package);setStatus(body.error??body.status)}

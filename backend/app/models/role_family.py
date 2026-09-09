@@ -2,6 +2,12 @@ from enum import StrEnum
 from pydantic import BaseModel,Field
 
 class RoleFamily(StrEnum):
+    clinical_research="CLINICAL_RESEARCH"
+    public_health="PUBLIC_HEALTH"
+    healthcare_operations="HEALTHCARE_OPERATIONS"
+    research="RESEARCH"
+    software_engineering="SOFTWARE_ENGINEERING"
+    information_technology="INFORMATION_TECHNOLOGY"
     research_ai="RESEARCH_AI"; data_science="DATA_SCIENCE"; product_management="PRODUCT_MANAGEMENT"; unknown="UNKNOWN"
 class ClassificationMethod(StrEnum): deterministic_rules="deterministic_rules"; human_override="human_override"; future_llm="future_llm"
 class RoleFamilyClassification(BaseModel):

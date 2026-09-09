@@ -1,6 +1,6 @@
 import "server-only";
 import {connection} from "next/server";
-import {AgentRun,ApplicationForm,ApplicationPackage,ApplicationSettings,ApplicationSummary,CandidateProfile,CareerRun,Company,EvidenceRecord,EligibilityDecision,Job,JobList,JobResearchReport,JobSource,MorningReport,OperationsStatus,ScanRun,SemanticFitReport} from "@/lib/types";
+import {AgentRun,ApplicationForm,ApplicationPackage,ApplicationSettings,ApplicationSummary,CandidateProfile,CareerRun,Company,ContactList,EvidenceRecord,EligibilityDecision,Job,JobList,JobResearchReport,JobSource,MorningReport,OperationsStatus,ScanRun,SemanticFitReport} from "@/lib/types";
 
 const INTERNAL_API_URL=process.env.INTERNAL_API_URL??process.env.NEXT_PUBLIC_API_URL??"http://localhost:8000";
 
@@ -17,6 +17,8 @@ async function serverGet<T>(path:string,{optional=false}:{optional?:boolean}={})
 export const getJobs=()=>serverGet<JobList>("/jobs") as Promise<JobList>;
 export const getJob=(id:string)=>serverGet<Job>(`/jobs/${id}`,{optional:true});
 export const getProfile=()=>serverGet<CandidateProfile>("/profile");
+export type ProfilePreferences={preferred_titles:string[];preferred_domains:string[];locations:string[];remote_allowed:boolean;hybrid_allowed:boolean;onsite_allowed:boolean;minimum_salary:number|null};
+export const getProfilePreferences=async()=>((await serverGet<{preferences:ProfilePreferences}>("/onboarding")) as {preferences:ProfilePreferences}).preferences;
 export const getEvidence=()=>serverGet<EvidenceRecord[]>("/profile/evidence") as Promise<EvidenceRecord[]>;
 export const getSources=()=>serverGet<JobSource[]>("/sources") as Promise<JobSource[]>;
 export const getScans=()=>serverGet<ScanRun[]>("/scans") as Promise<ScanRun[]>;
@@ -33,3 +35,4 @@ export const getMorningReport=()=>serverGet<MorningReport>("/reports/morning/lat
 export const getOperationsStatus=()=>serverGet<OperationsStatus>("/operations/status",{optional:true});
 export const getLatestCareerRun=()=>serverGet<CareerRun>("/career-intelligence/runs/latest",{optional:true});
 export const getOnboardingState=()=>serverGet<{configured:boolean}>("/onboarding") as Promise<{configured:boolean}>;
+export const getContacts=(id:string)=>serverGet<ContactList>(`/jobs/${id}/contacts`) as Promise<ContactList>;

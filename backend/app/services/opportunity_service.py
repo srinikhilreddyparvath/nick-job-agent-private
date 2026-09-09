@@ -64,6 +64,9 @@ class OpportunityScoringService:
         else:base=0
         known=[x for x in (base,technical,career,research,skills,location,compensation,freshness) if x is not None]
         overall=round(base*.8+freshness*.2,1) if deterministic is not None or semantic is not None else round(sum(known)/len(known),1) if known else 0
+        cap = self._component(job, "role_family_gate")
+        if cap is not None: overall = min(overall, cap)
+        if deterministic is None and semantic is None: overall = 0
         if constraints.hard_blockers:recommendation=OpportunityRecommendation.skip
         elif overall>=82:recommendation=OpportunityRecommendation.apply_now
         elif overall>=65:recommendation=OpportunityRecommendation.apply

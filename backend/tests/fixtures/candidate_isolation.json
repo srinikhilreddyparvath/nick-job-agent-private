@@ -1,0 +1,2001 @@
+{
+  "candidates": {
+    "AI": {
+      "profile": {
+        "roles": [
+          {
+            "value": "Machine Learning Engineer",
+            "evidence_ids": [
+              "AI_0",
+              "AI_1",
+              "AI_2",
+              "AI_3",
+              "AI_4",
+              "AI_5",
+              "AI_6",
+              "AI_7"
+            ]
+          }
+        ],
+        "skills": [
+          {
+            "value": "machine learning",
+            "evidence_ids": [
+              "AI_0"
+            ]
+          },
+          {
+            "value": "retrieval",
+            "evidence_ids": [
+              "AI_1"
+            ]
+          },
+          {
+            "value": "search ranking",
+            "evidence_ids": [
+              "AI_2"
+            ]
+          },
+          {
+            "value": "pytorch",
+            "evidence_ids": [
+              "AI_3"
+            ]
+          },
+          {
+            "value": "tensorflow",
+            "evidence_ids": [
+              "AI_4"
+            ]
+          },
+          {
+            "value": "nlp",
+            "evidence_ids": [
+              "AI_5"
+            ]
+          },
+          {
+            "value": "llm",
+            "evidence_ids": [
+              "AI_6"
+            ]
+          },
+          {
+            "value": "python",
+            "evidence_ids": [
+              "AI_7"
+            ]
+          }
+        ]
+      },
+      "evidence": [
+        {
+          "id": "AI_0",
+          "category": "skills",
+          "sub_category": "domain",
+          "statement": "Fictional candidate demonstrated machine learning.",
+          "source": "fictional_fixture",
+          "source_reference": "fictional-AI.txt",
+          "source_document": "fictional-AI.txt",
+          "supporting_text": "Fictional candidate demonstrated machine learning.",
+          "verified": true
+        },
+        {
+          "id": "AI_1",
+          "category": "skills",
+          "sub_category": "domain",
+          "statement": "Fictional candidate demonstrated retrieval.",
+          "source": "fictional_fixture",
+          "source_reference": "fictional-AI.txt",
+          "source_document": "fictional-AI.txt",
+          "supporting_text": "Fictional candidate demonstrated retrieval.",
+          "verified": true
+        },
+        {
+          "id": "AI_2",
+          "category": "skills",
+          "sub_category": "domain",
+          "statement": "Fictional candidate demonstrated search ranking.",
+          "source": "fictional_fixture",
+          "source_reference": "fictional-AI.txt",
+          "source_document": "fictional-AI.txt",
+          "supporting_text": "Fictional candidate demonstrated search ranking.",
+          "verified": true
+        },
+        {
+          "id": "AI_3",
+          "category": "skills",
+          "sub_category": "domain",
+          "statement": "Fictional candidate demonstrated pytorch.",
+          "source": "fictional_fixture",
+          "source_reference": "fictional-AI.txt",
+          "source_document": "fictional-AI.txt",
+          "supporting_text": "Fictional candidate demonstrated pytorch.",
+          "verified": true
+        },
+        {
+          "id": "AI_4",
+          "category": "skills",
+          "sub_category": "domain",
+          "statement": "Fictional candidate demonstrated tensorflow.",
+          "source": "fictional_fixture",
+          "source_reference": "fictional-AI.txt",
+          "source_document": "fictional-AI.txt",
+          "supporting_text": "Fictional candidate demonstrated tensorflow.",
+          "verified": true
+        },
+        {
+          "id": "AI_5",
+          "category": "skills",
+          "sub_category": "domain",
+          "statement": "Fictional candidate demonstrated nlp.",
+          "source": "fictional_fixture",
+          "source_reference": "fictional-AI.txt",
+          "source_document": "fictional-AI.txt",
+          "supporting_text": "Fictional candidate demonstrated nlp.",
+          "verified": true
+        },
+        {
+          "id": "AI_6",
+          "category": "skills",
+          "sub_category": "domain",
+          "statement": "Fictional candidate demonstrated llm.",
+          "source": "fictional_fixture",
+          "source_reference": "fictional-AI.txt",
+          "source_document": "fictional-AI.txt",
+          "supporting_text": "Fictional candidate demonstrated llm.",
+          "verified": true
+        },
+        {
+          "id": "AI_7",
+          "category": "skills",
+          "sub_category": "domain",
+          "statement": "Fictional candidate demonstrated python.",
+          "source": "fictional_fixture",
+          "source_reference": "fictional-AI.txt",
+          "source_document": "fictional-AI.txt",
+          "supporting_text": "Fictional candidate demonstrated python.",
+          "verified": true
+        }
+      ],
+      "preferences": {
+        "preferred_titles": [
+          "Machine Learning Engineer",
+          "Search Ranking Scientist",
+          "Research Engineer",
+          "Applied Scientist"
+        ],
+        "preferred_domains": [
+          "machine learning",
+          "retrieval",
+          "search ranking",
+          "pytorch",
+          "tensorflow",
+          "nlp",
+          "llm",
+          "python"
+        ],
+        "locations": []
+      },
+      "confirm_replacement": true,
+      "preferences_reviewed": true
+    },
+    "CLINICAL": {
+      "profile": {
+        "roles": [
+          {
+            "value": "Clinical Research Coordinator",
+            "evidence_ids": [
+              "CLINICAL_0",
+              "CLINICAL_1",
+              "CLINICAL_2",
+              "CLINICAL_3",
+              "CLINICAL_4",
+              "CLINICAL_5",
+              "CLINICAL_6",
+              "CLINICAL_7",
+              "CLINICAL_8",
+              "CLINICAL_9",
+              "CLINICAL_10",
+              "CLINICAL_11",
+              "CLINICAL_12",
+              "CLINICAL_13"
+            ]
+          }
+        ],
+        "skills": [
+          {
+            "value": "clinical research",
+            "evidence_ids": [
+              "CLINICAL_0"
+            ]
+          },
+          {
+            "value": "clinical trials",
+            "evidence_ids": [
+              "CLINICAL_1"
+            ]
+          },
+          {
+            "value": "oncology",
+            "evidence_ids": [
+              "CLINICAL_2"
+            ]
+          },
+          {
+            "value": "cancer",
+            "evidence_ids": [
+              "CLINICAL_3"
+            ]
+          },
+          {
+            "value": "protocol",
+            "evidence_ids": [
+              "CLINICAL_4"
+            ]
+          },
+          {
+            "value": "participant screening",
+            "evidence_ids": [
+              "CLINICAL_5"
+            ]
+          },
+          {
+            "value": "regulatory documentation",
+            "evidence_ids": [
+              "CLINICAL_6"
+            ]
+          },
+          {
+            "value": "IRB",
+            "evidence_ids": [
+              "CLINICAL_7"
+            ]
+          },
+          {
+            "value": "GCP",
+            "evidence_ids": [
+              "CLINICAL_8"
+            ]
+          },
+          {
+            "value": "research operations",
+            "evidence_ids": [
+              "CLINICAL_9"
+            ]
+          },
+          {
+            "value": "public health",
+            "evidence_ids": [
+              "CLINICAL_10"
+            ]
+          },
+          {
+            "value": "epidemiology",
+            "evidence_ids": [
+              "CLINICAL_11"
+            ]
+          },
+          {
+            "value": "population health",
+            "evidence_ids": [
+              "CLINICAL_12"
+            ]
+          },
+          {
+            "value": "biostatistics",
+            "evidence_ids": [
+              "CLINICAL_13"
+            ]
+          }
+        ]
+      },
+      "evidence": [
+        {
+          "id": "CLINICAL_0",
+          "category": "skills",
+          "sub_category": "domain",
+          "statement": "Fictional candidate demonstrated clinical research.",
+          "source": "fictional_fixture",
+          "source_reference": "fictional-CLINICAL.txt",
+          "source_document": "fictional-CLINICAL.txt",
+          "supporting_text": "Fictional candidate demonstrated clinical research.",
+          "verified": true
+        },
+        {
+          "id": "CLINICAL_1",
+          "category": "skills",
+          "sub_category": "domain",
+          "statement": "Fictional candidate demonstrated clinical trials.",
+          "source": "fictional_fixture",
+          "source_reference": "fictional-CLINICAL.txt",
+          "source_document": "fictional-CLINICAL.txt",
+          "supporting_text": "Fictional candidate demonstrated clinical trials.",
+          "verified": true
+        },
+        {
+          "id": "CLINICAL_2",
+          "category": "skills",
+          "sub_category": "domain",
+          "statement": "Fictional candidate demonstrated oncology.",
+          "source": "fictional_fixture",
+          "source_reference": "fictional-CLINICAL.txt",
+          "source_document": "fictional-CLINICAL.txt",
+          "supporting_text": "Fictional candidate demonstrated oncology.",
+          "verified": true
+        },
+        {
+          "id": "CLINICAL_3",
+          "category": "skills",
+          "sub_category": "domain",
+          "statement": "Fictional candidate demonstrated cancer.",
+          "source": "fictional_fixture",
+          "source_reference": "fictional-CLINICAL.txt",
+          "source_document": "fictional-CLINICAL.txt",
+          "supporting_text": "Fictional candidate demonstrated cancer.",
+          "verified": true
+        },
+        {
+          "id": "CLINICAL_4",
+          "category": "skills",
+          "sub_category": "domain",
+          "statement": "Fictional candidate demonstrated protocol.",
+          "source": "fictional_fixture",
+          "source_reference": "fictional-CLINICAL.txt",
+          "source_document": "fictional-CLINICAL.txt",
+          "supporting_text": "Fictional candidate demonstrated protocol.",
+          "verified": true
+        },
+        {
+          "id": "CLINICAL_5",
+          "category": "skills",
+          "sub_category": "domain",
+          "statement": "Fictional candidate demonstrated participant screening.",
+          "source": "fictional_fixture",
+          "source_reference": "fictional-CLINICAL.txt",
+          "source_document": "fictional-CLINICAL.txt",
+          "supporting_text": "Fictional candidate demonstrated participant screening.",
+          "verified": true
+        },
+        {
+          "id": "CLINICAL_6",
+          "category": "skills",
+          "sub_category": "domain",
+          "statement": "Fictional candidate demonstrated regulatory documentation.",
+          "source": "fictional_fixture",
+          "source_reference": "fictional-CLINICAL.txt",
+          "source_document": "fictional-CLINICAL.txt",
+          "supporting_text": "Fictional candidate demonstrated regulatory documentation.",
+          "verified": true
+        },
+        {
+          "id": "CLINICAL_7",
+          "category": "skills",
+          "sub_category": "domain",
+          "statement": "Fictional candidate demonstrated IRB.",
+          "source": "fictional_fixture",
+          "source_reference": "fictional-CLINICAL.txt",
+          "source_document": "fictional-CLINICAL.txt",
+          "supporting_text": "Fictional candidate demonstrated IRB.",
+          "verified": true
+        },
+        {
+          "id": "CLINICAL_8",
+          "category": "skills",
+          "sub_category": "domain",
+          "statement": "Fictional candidate demonstrated GCP.",
+          "source": "fictional_fixture",
+          "source_reference": "fictional-CLINICAL.txt",
+          "source_document": "fictional-CLINICAL.txt",
+          "supporting_text": "Fictional candidate demonstrated GCP.",
+          "verified": true
+        },
+        {
+          "id": "CLINICAL_9",
+          "category": "skills",
+          "sub_category": "domain",
+          "statement": "Fictional candidate demonstrated research operations.",
+          "source": "fictional_fixture",
+          "source_reference": "fictional-CLINICAL.txt",
+          "source_document": "fictional-CLINICAL.txt",
+          "supporting_text": "Fictional candidate demonstrated research operations.",
+          "verified": true
+        },
+        {
+          "id": "CLINICAL_10",
+          "category": "skills",
+          "sub_category": "domain",
+          "statement": "Fictional candidate demonstrated public health.",
+          "source": "fictional_fixture",
+          "source_reference": "fictional-CLINICAL.txt",
+          "source_document": "fictional-CLINICAL.txt",
+          "supporting_text": "Fictional candidate demonstrated public health.",
+          "verified": true
+        },
+        {
+          "id": "CLINICAL_11",
+          "category": "skills",
+          "sub_category": "domain",
+          "statement": "Fictional candidate demonstrated epidemiology.",
+          "source": "fictional_fixture",
+          "source_reference": "fictional-CLINICAL.txt",
+          "source_document": "fictional-CLINICAL.txt",
+          "supporting_text": "Fictional candidate demonstrated epidemiology.",
+          "verified": true
+        },
+        {
+          "id": "CLINICAL_12",
+          "category": "skills",
+          "sub_category": "domain",
+          "statement": "Fictional candidate demonstrated population health.",
+          "source": "fictional_fixture",
+          "source_reference": "fictional-CLINICAL.txt",
+          "source_document": "fictional-CLINICAL.txt",
+          "supporting_text": "Fictional candidate demonstrated population health.",
+          "verified": true
+        },
+        {
+          "id": "CLINICAL_13",
+          "category": "skills",
+          "sub_category": "domain",
+          "statement": "Fictional candidate demonstrated biostatistics.",
+          "source": "fictional_fixture",
+          "source_reference": "fictional-CLINICAL.txt",
+          "source_document": "fictional-CLINICAL.txt",
+          "supporting_text": "Fictional candidate demonstrated biostatistics.",
+          "verified": true
+        }
+      ],
+      "preferences": {
+        "preferred_titles": [
+          "Clinical Research Coordinator",
+          "Senior Clinical Research Coordinator",
+          "Clinical Research Associate",
+          "Clinical Trials Specialist",
+          "Clinical Research Program Manager",
+          "Oncology Research Coordinator",
+          "Research Program Coordinator",
+          "Public Health Analyst",
+          "Epidemiology Research Associate",
+          "Clinical Trial Manager"
+        ],
+        "preferred_domains": [
+          "clinical research",
+          "clinical trials",
+          "oncology",
+          "cancer",
+          "protocol",
+          "participant screening",
+          "regulatory documentation",
+          "IRB",
+          "GCP",
+          "research operations",
+          "public health",
+          "epidemiology",
+          "population health",
+          "biostatistics"
+        ],
+        "locations": []
+      },
+      "confirm_replacement": true,
+      "preferences_reviewed": true
+    },
+    "PRODUCT": {
+      "profile": {
+        "roles": [
+          {
+            "value": "Senior Product Manager",
+            "evidence_ids": [
+              "PRODUCT_0",
+              "PRODUCT_1",
+              "PRODUCT_2",
+              "PRODUCT_3",
+              "PRODUCT_4",
+              "PRODUCT_5",
+              "PRODUCT_6",
+              "PRODUCT_7",
+              "PRODUCT_8"
+            ]
+          }
+        ],
+        "skills": [
+          {
+            "value": "product management",
+            "evidence_ids": [
+              "PRODUCT_0"
+            ]
+          },
+          {
+            "value": "product manager",
+            "evidence_ids": [
+              "PRODUCT_1"
+            ]
+          },
+          {
+            "value": "roadmap",
+            "evidence_ids": [
+              "PRODUCT_2"
+            ]
+          },
+          {
+            "value": "product strategy",
+            "evidence_ids": [
+              "PRODUCT_3"
+            ]
+          },
+          {
+            "value": "product launch",
+            "evidence_ids": [
+              "PRODUCT_4"
+            ]
+          },
+          {
+            "value": "user research",
+            "evidence_ids": [
+              "PRODUCT_5"
+            ]
+          },
+          {
+            "value": "product discovery",
+            "evidence_ids": [
+              "PRODUCT_6"
+            ]
+          },
+          {
+            "value": "prioritization",
+            "evidence_ids": [
+              "PRODUCT_7"
+            ]
+          },
+          {
+            "value": "go-to-market",
+            "evidence_ids": [
+              "PRODUCT_8"
+            ]
+          }
+        ]
+      },
+      "evidence": [
+        {
+          "id": "PRODUCT_0",
+          "category": "skills",
+          "sub_category": "domain",
+          "statement": "Fictional candidate demonstrated product management.",
+          "source": "fictional_fixture",
+          "source_reference": "fictional-PRODUCT.txt",
+          "source_document": "fictional-PRODUCT.txt",
+          "supporting_text": "Fictional candidate demonstrated product management.",
+          "verified": true
+        },
+        {
+          "id": "PRODUCT_1",
+          "category": "skills",
+          "sub_category": "domain",
+          "statement": "Fictional candidate demonstrated product manager.",
+          "source": "fictional_fixture",
+          "source_reference": "fictional-PRODUCT.txt",
+          "source_document": "fictional-PRODUCT.txt",
+          "supporting_text": "Fictional candidate demonstrated product manager.",
+          "verified": true
+        },
+        {
+          "id": "PRODUCT_2",
+          "category": "skills",
+          "sub_category": "domain",
+          "statement": "Fictional candidate demonstrated roadmap.",
+          "source": "fictional_fixture",
+          "source_reference": "fictional-PRODUCT.txt",
+          "source_document": "fictional-PRODUCT.txt",
+          "supporting_text": "Fictional candidate demonstrated roadmap.",
+          "verified": true
+        },
+        {
+          "id": "PRODUCT_3",
+          "category": "skills",
+          "sub_category": "domain",
+          "statement": "Fictional candidate demonstrated product strategy.",
+          "source": "fictional_fixture",
+          "source_reference": "fictional-PRODUCT.txt",
+          "source_document": "fictional-PRODUCT.txt",
+          "supporting_text": "Fictional candidate demonstrated product strategy.",
+          "verified": true
+        },
+        {
+          "id": "PRODUCT_4",
+          "category": "skills",
+          "sub_category": "domain",
+          "statement": "Fictional candidate demonstrated product launch.",
+          "source": "fictional_fixture",
+          "source_reference": "fictional-PRODUCT.txt",
+          "source_document": "fictional-PRODUCT.txt",
+          "supporting_text": "Fictional candidate demonstrated product launch.",
+          "verified": true
+        },
+        {
+          "id": "PRODUCT_5",
+          "category": "skills",
+          "sub_category": "domain",
+          "statement": "Fictional candidate demonstrated user research.",
+          "source": "fictional_fixture",
+          "source_reference": "fictional-PRODUCT.txt",
+          "source_document": "fictional-PRODUCT.txt",
+          "supporting_text": "Fictional candidate demonstrated user research.",
+          "verified": true
+        },
+        {
+          "id": "PRODUCT_6",
+          "category": "skills",
+          "sub_category": "domain",
+          "statement": "Fictional candidate demonstrated product discovery.",
+          "source": "fictional_fixture",
+          "source_reference": "fictional-PRODUCT.txt",
+          "source_document": "fictional-PRODUCT.txt",
+          "supporting_text": "Fictional candidate demonstrated product discovery.",
+          "verified": true
+        },
+        {
+          "id": "PRODUCT_7",
+          "category": "skills",
+          "sub_category": "domain",
+          "statement": "Fictional candidate demonstrated prioritization.",
+          "source": "fictional_fixture",
+          "source_reference": "fictional-PRODUCT.txt",
+          "source_document": "fictional-PRODUCT.txt",
+          "supporting_text": "Fictional candidate demonstrated prioritization.",
+          "verified": true
+        },
+        {
+          "id": "PRODUCT_8",
+          "category": "skills",
+          "sub_category": "domain",
+          "statement": "Fictional candidate demonstrated go-to-market.",
+          "source": "fictional_fixture",
+          "source_reference": "fictional-PRODUCT.txt",
+          "source_document": "fictional-PRODUCT.txt",
+          "supporting_text": "Fictional candidate demonstrated go-to-market.",
+          "verified": true
+        }
+      ],
+      "preferences": {
+        "preferred_titles": [
+          "Senior Product Manager",
+          "Staff Product Manager",
+          "Group Product Manager",
+          "Product Manager"
+        ],
+        "preferred_domains": [
+          "product management",
+          "product manager",
+          "roadmap",
+          "product strategy",
+          "product launch",
+          "user research",
+          "product discovery",
+          "prioritization",
+          "go-to-market"
+        ],
+        "locations": []
+      },
+      "confirm_replacement": true,
+      "preferences_reviewed": true
+    }
+  },
+  "jobs": [
+    {
+      "external_id": "isolation-AI-0",
+      "source": "fictional_isolation",
+      "company": "Fictional AI Research Group 0",
+      "title": "Machine Learning Engineer",
+      "description": "Verified role requirements: machine learning, retrieval, search ranking, pytorch, tensorflow, nlp, llm, python.",
+      "requirements": [
+        "machine learning",
+        "retrieval",
+        "search ranking",
+        "pytorch",
+        "tensorflow",
+        "nlp",
+        "llm",
+        "python"
+      ],
+      "apply_url": "https://example.test/isolation/AI/0",
+      "source_url": "https://example.test/isolation/AI/0"
+    },
+    {
+      "external_id": "isolation-AI-1",
+      "source": "fictional_isolation",
+      "company": "Fictional AI Research Group 1",
+      "title": "Search Ranking Scientist",
+      "description": "Verified role requirements: machine learning, retrieval, search ranking, pytorch, tensorflow, nlp, llm, python.",
+      "requirements": [
+        "machine learning",
+        "retrieval",
+        "search ranking",
+        "pytorch",
+        "tensorflow",
+        "nlp",
+        "llm",
+        "python"
+      ],
+      "apply_url": "https://example.test/isolation/AI/1",
+      "source_url": "https://example.test/isolation/AI/1"
+    },
+    {
+      "external_id": "isolation-AI-2",
+      "source": "fictional_isolation",
+      "company": "Fictional AI Research Group 2",
+      "title": "Research Engineer",
+      "description": "Verified role requirements: machine learning, retrieval, search ranking, pytorch, tensorflow, nlp, llm, python.",
+      "requirements": [
+        "machine learning",
+        "retrieval",
+        "search ranking",
+        "pytorch",
+        "tensorflow",
+        "nlp",
+        "llm",
+        "python"
+      ],
+      "apply_url": "https://example.test/isolation/AI/2",
+      "source_url": "https://example.test/isolation/AI/2"
+    },
+    {
+      "external_id": "isolation-AI-3",
+      "source": "fictional_isolation",
+      "company": "Fictional AI Research Group 3",
+      "title": "Applied Scientist",
+      "description": "Verified role requirements: machine learning, retrieval, search ranking, pytorch, tensorflow, nlp, llm, python.",
+      "requirements": [
+        "machine learning",
+        "retrieval",
+        "search ranking",
+        "pytorch",
+        "tensorflow",
+        "nlp",
+        "llm",
+        "python"
+      ],
+      "apply_url": "https://example.test/isolation/AI/3",
+      "source_url": "https://example.test/isolation/AI/3"
+    },
+    {
+      "external_id": "isolation-AI-4",
+      "source": "fictional_isolation",
+      "company": "Fictional AI Research Group 4",
+      "title": "Machine Learning Engineer",
+      "description": "Verified role requirements: machine learning, retrieval, search ranking, pytorch, tensorflow, nlp, llm, python.",
+      "requirements": [
+        "machine learning",
+        "retrieval",
+        "search ranking",
+        "pytorch",
+        "tensorflow",
+        "nlp",
+        "llm",
+        "python"
+      ],
+      "apply_url": "https://example.test/isolation/AI/4",
+      "source_url": "https://example.test/isolation/AI/4"
+    },
+    {
+      "external_id": "isolation-AI-5",
+      "source": "fictional_isolation",
+      "company": "Fictional AI Research Group 5",
+      "title": "Search Ranking Scientist",
+      "description": "Verified role requirements: machine learning, retrieval, search ranking, pytorch, tensorflow, nlp, llm, python.",
+      "requirements": [
+        "machine learning",
+        "retrieval",
+        "search ranking",
+        "pytorch",
+        "tensorflow",
+        "nlp",
+        "llm",
+        "python"
+      ],
+      "apply_url": "https://example.test/isolation/AI/5",
+      "source_url": "https://example.test/isolation/AI/5"
+    },
+    {
+      "external_id": "isolation-AI-6",
+      "source": "fictional_isolation",
+      "company": "Fictional AI Research Group 6",
+      "title": "Research Engineer",
+      "description": "Verified role requirements: machine learning, retrieval, search ranking, pytorch, tensorflow, nlp, llm, python.",
+      "requirements": [
+        "machine learning",
+        "retrieval",
+        "search ranking",
+        "pytorch",
+        "tensorflow",
+        "nlp",
+        "llm",
+        "python"
+      ],
+      "apply_url": "https://example.test/isolation/AI/6",
+      "source_url": "https://example.test/isolation/AI/6"
+    },
+    {
+      "external_id": "isolation-AI-7",
+      "source": "fictional_isolation",
+      "company": "Fictional AI Research Group 7",
+      "title": "Applied Scientist",
+      "description": "Verified role requirements: machine learning, retrieval, search ranking, pytorch, tensorflow, nlp, llm, python.",
+      "requirements": [
+        "machine learning",
+        "retrieval",
+        "search ranking",
+        "pytorch",
+        "tensorflow",
+        "nlp",
+        "llm",
+        "python"
+      ],
+      "apply_url": "https://example.test/isolation/AI/7",
+      "source_url": "https://example.test/isolation/AI/7"
+    },
+    {
+      "external_id": "isolation-AI-8",
+      "source": "fictional_isolation",
+      "company": "Fictional AI Research Group 8",
+      "title": "Machine Learning Engineer",
+      "description": "Verified role requirements: machine learning, retrieval, search ranking, pytorch, tensorflow, nlp, llm, python.",
+      "requirements": [
+        "machine learning",
+        "retrieval",
+        "search ranking",
+        "pytorch",
+        "tensorflow",
+        "nlp",
+        "llm",
+        "python"
+      ],
+      "apply_url": "https://example.test/isolation/AI/8",
+      "source_url": "https://example.test/isolation/AI/8"
+    },
+    {
+      "external_id": "isolation-AI-9",
+      "source": "fictional_isolation",
+      "company": "Fictional AI Research Group 9",
+      "title": "Search Ranking Scientist",
+      "description": "Verified role requirements: machine learning, retrieval, search ranking, pytorch, tensorflow, nlp, llm, python.",
+      "requirements": [
+        "machine learning",
+        "retrieval",
+        "search ranking",
+        "pytorch",
+        "tensorflow",
+        "nlp",
+        "llm",
+        "python"
+      ],
+      "apply_url": "https://example.test/isolation/AI/9",
+      "source_url": "https://example.test/isolation/AI/9"
+    },
+    {
+      "external_id": "isolation-AI-10",
+      "source": "fictional_isolation",
+      "company": "Fictional AI Research Group 10",
+      "title": "Research Engineer",
+      "description": "Verified role requirements: machine learning, retrieval, search ranking, pytorch, tensorflow, nlp, llm, python.",
+      "requirements": [
+        "machine learning",
+        "retrieval",
+        "search ranking",
+        "pytorch",
+        "tensorflow",
+        "nlp",
+        "llm",
+        "python"
+      ],
+      "apply_url": "https://example.test/isolation/AI/10",
+      "source_url": "https://example.test/isolation/AI/10"
+    },
+    {
+      "external_id": "isolation-AI-11",
+      "source": "fictional_isolation",
+      "company": "Fictional AI Research Group 11",
+      "title": "Applied Scientist",
+      "description": "Verified role requirements: machine learning, retrieval, search ranking, pytorch, tensorflow, nlp, llm, python.",
+      "requirements": [
+        "machine learning",
+        "retrieval",
+        "search ranking",
+        "pytorch",
+        "tensorflow",
+        "nlp",
+        "llm",
+        "python"
+      ],
+      "apply_url": "https://example.test/isolation/AI/11",
+      "source_url": "https://example.test/isolation/AI/11"
+    },
+    {
+      "external_id": "isolation-AI-12",
+      "source": "fictional_isolation",
+      "company": "Fictional AI Research Group 12",
+      "title": "Machine Learning Engineer",
+      "description": "Verified role requirements: machine learning, retrieval, search ranking, pytorch, tensorflow, nlp, llm, python.",
+      "requirements": [
+        "machine learning",
+        "retrieval",
+        "search ranking",
+        "pytorch",
+        "tensorflow",
+        "nlp",
+        "llm",
+        "python"
+      ],
+      "apply_url": "https://example.test/isolation/AI/12",
+      "source_url": "https://example.test/isolation/AI/12"
+    },
+    {
+      "external_id": "isolation-AI-13",
+      "source": "fictional_isolation",
+      "company": "Fictional AI Research Group 13",
+      "title": "Search Ranking Scientist",
+      "description": "Verified role requirements: machine learning, retrieval, search ranking, pytorch, tensorflow, nlp, llm, python.",
+      "requirements": [
+        "machine learning",
+        "retrieval",
+        "search ranking",
+        "pytorch",
+        "tensorflow",
+        "nlp",
+        "llm",
+        "python"
+      ],
+      "apply_url": "https://example.test/isolation/AI/13",
+      "source_url": "https://example.test/isolation/AI/13"
+    },
+    {
+      "external_id": "isolation-AI-14",
+      "source": "fictional_isolation",
+      "company": "Fictional AI Research Group 14",
+      "title": "Research Engineer",
+      "description": "Verified role requirements: machine learning, retrieval, search ranking, pytorch, tensorflow, nlp, llm, python.",
+      "requirements": [
+        "machine learning",
+        "retrieval",
+        "search ranking",
+        "pytorch",
+        "tensorflow",
+        "nlp",
+        "llm",
+        "python"
+      ],
+      "apply_url": "https://example.test/isolation/AI/14",
+      "source_url": "https://example.test/isolation/AI/14"
+    },
+    {
+      "external_id": "isolation-AI-15",
+      "source": "fictional_isolation",
+      "company": "Fictional AI Research Group 15",
+      "title": "Applied Scientist",
+      "description": "Verified role requirements: machine learning, retrieval, search ranking, pytorch, tensorflow, nlp, llm, python.",
+      "requirements": [
+        "machine learning",
+        "retrieval",
+        "search ranking",
+        "pytorch",
+        "tensorflow",
+        "nlp",
+        "llm",
+        "python"
+      ],
+      "apply_url": "https://example.test/isolation/AI/15",
+      "source_url": "https://example.test/isolation/AI/15"
+    },
+    {
+      "external_id": "isolation-AI-16",
+      "source": "fictional_isolation",
+      "company": "Fictional AI Research Group 16",
+      "title": "Machine Learning Engineer",
+      "description": "Verified role requirements: machine learning, retrieval, search ranking, pytorch, tensorflow, nlp, llm, python.",
+      "requirements": [
+        "machine learning",
+        "retrieval",
+        "search ranking",
+        "pytorch",
+        "tensorflow",
+        "nlp",
+        "llm",
+        "python"
+      ],
+      "apply_url": "https://example.test/isolation/AI/16",
+      "source_url": "https://example.test/isolation/AI/16"
+    },
+    {
+      "external_id": "isolation-AI-17",
+      "source": "fictional_isolation",
+      "company": "Fictional AI Research Group 17",
+      "title": "Search Ranking Scientist",
+      "description": "Verified role requirements: machine learning, retrieval, search ranking, pytorch, tensorflow, nlp, llm, python.",
+      "requirements": [
+        "machine learning",
+        "retrieval",
+        "search ranking",
+        "pytorch",
+        "tensorflow",
+        "nlp",
+        "llm",
+        "python"
+      ],
+      "apply_url": "https://example.test/isolation/AI/17",
+      "source_url": "https://example.test/isolation/AI/17"
+    },
+    {
+      "external_id": "isolation-AI-18",
+      "source": "fictional_isolation",
+      "company": "Fictional AI Research Group 18",
+      "title": "Research Engineer",
+      "description": "Verified role requirements: machine learning, retrieval, search ranking, pytorch, tensorflow, nlp, llm, python.",
+      "requirements": [
+        "machine learning",
+        "retrieval",
+        "search ranking",
+        "pytorch",
+        "tensorflow",
+        "nlp",
+        "llm",
+        "python"
+      ],
+      "apply_url": "https://example.test/isolation/AI/18",
+      "source_url": "https://example.test/isolation/AI/18"
+    },
+    {
+      "external_id": "isolation-AI-19",
+      "source": "fictional_isolation",
+      "company": "Fictional AI Research Group 19",
+      "title": "Applied Scientist",
+      "description": "Verified role requirements: machine learning, retrieval, search ranking, pytorch, tensorflow, nlp, llm, python.",
+      "requirements": [
+        "machine learning",
+        "retrieval",
+        "search ranking",
+        "pytorch",
+        "tensorflow",
+        "nlp",
+        "llm",
+        "python"
+      ],
+      "apply_url": "https://example.test/isolation/AI/19",
+      "source_url": "https://example.test/isolation/AI/19"
+    },
+    {
+      "external_id": "isolation-CLINICAL-0",
+      "source": "fictional_isolation",
+      "company": "Fictional CLINICAL Research Group 0",
+      "title": "Clinical Research Coordinator",
+      "description": "Verified role requirements: clinical research, clinical trials, oncology, cancer, protocol, participant screening, regulatory documentation, IRB, GCP, research operations, public health, epidemiology, population health, biostatistics.",
+      "requirements": [
+        "clinical research",
+        "clinical trials",
+        "oncology",
+        "cancer",
+        "protocol",
+        "participant screening",
+        "regulatory documentation",
+        "IRB",
+        "GCP",
+        "research operations",
+        "public health",
+        "epidemiology",
+        "population health",
+        "biostatistics"
+      ],
+      "apply_url": "https://example.test/isolation/CLINICAL/0",
+      "source_url": "https://example.test/isolation/CLINICAL/0"
+    },
+    {
+      "external_id": "isolation-CLINICAL-1",
+      "source": "fictional_isolation",
+      "company": "Fictional CLINICAL Research Group 1",
+      "title": "Senior Clinical Research Coordinator",
+      "description": "Verified role requirements: clinical research, clinical trials, oncology, cancer, protocol, participant screening, regulatory documentation, IRB, GCP, research operations, public health, epidemiology, population health, biostatistics.",
+      "requirements": [
+        "clinical research",
+        "clinical trials",
+        "oncology",
+        "cancer",
+        "protocol",
+        "participant screening",
+        "regulatory documentation",
+        "IRB",
+        "GCP",
+        "research operations",
+        "public health",
+        "epidemiology",
+        "population health",
+        "biostatistics"
+      ],
+      "apply_url": "https://example.test/isolation/CLINICAL/1",
+      "source_url": "https://example.test/isolation/CLINICAL/1"
+    },
+    {
+      "external_id": "isolation-CLINICAL-2",
+      "source": "fictional_isolation",
+      "company": "Fictional CLINICAL Research Group 2",
+      "title": "Clinical Research Associate",
+      "description": "Verified role requirements: clinical research, clinical trials, oncology, cancer, protocol, participant screening, regulatory documentation, IRB, GCP, research operations, public health, epidemiology, population health, biostatistics.",
+      "requirements": [
+        "clinical research",
+        "clinical trials",
+        "oncology",
+        "cancer",
+        "protocol",
+        "participant screening",
+        "regulatory documentation",
+        "IRB",
+        "GCP",
+        "research operations",
+        "public health",
+        "epidemiology",
+        "population health",
+        "biostatistics"
+      ],
+      "apply_url": "https://example.test/isolation/CLINICAL/2",
+      "source_url": "https://example.test/isolation/CLINICAL/2"
+    },
+    {
+      "external_id": "isolation-CLINICAL-3",
+      "source": "fictional_isolation",
+      "company": "Fictional CLINICAL Research Group 3",
+      "title": "Clinical Trials Specialist",
+      "description": "Verified role requirements: clinical research, clinical trials, oncology, cancer, protocol, participant screening, regulatory documentation, IRB, GCP, research operations, public health, epidemiology, population health, biostatistics.",
+      "requirements": [
+        "clinical research",
+        "clinical trials",
+        "oncology",
+        "cancer",
+        "protocol",
+        "participant screening",
+        "regulatory documentation",
+        "IRB",
+        "GCP",
+        "research operations",
+        "public health",
+        "epidemiology",
+        "population health",
+        "biostatistics"
+      ],
+      "apply_url": "https://example.test/isolation/CLINICAL/3",
+      "source_url": "https://example.test/isolation/CLINICAL/3"
+    },
+    {
+      "external_id": "isolation-CLINICAL-4",
+      "source": "fictional_isolation",
+      "company": "Fictional CLINICAL Research Group 4",
+      "title": "Clinical Research Program Manager",
+      "description": "Verified role requirements: clinical research, clinical trials, oncology, cancer, protocol, participant screening, regulatory documentation, IRB, GCP, research operations, public health, epidemiology, population health, biostatistics.",
+      "requirements": [
+        "clinical research",
+        "clinical trials",
+        "oncology",
+        "cancer",
+        "protocol",
+        "participant screening",
+        "regulatory documentation",
+        "IRB",
+        "GCP",
+        "research operations",
+        "public health",
+        "epidemiology",
+        "population health",
+        "biostatistics"
+      ],
+      "apply_url": "https://example.test/isolation/CLINICAL/4",
+      "source_url": "https://example.test/isolation/CLINICAL/4"
+    },
+    {
+      "external_id": "isolation-CLINICAL-5",
+      "source": "fictional_isolation",
+      "company": "Fictional CLINICAL Research Group 5",
+      "title": "Oncology Research Coordinator",
+      "description": "Verified role requirements: clinical research, clinical trials, oncology, cancer, protocol, participant screening, regulatory documentation, IRB, GCP, research operations, public health, epidemiology, population health, biostatistics.",
+      "requirements": [
+        "clinical research",
+        "clinical trials",
+        "oncology",
+        "cancer",
+        "protocol",
+        "participant screening",
+        "regulatory documentation",
+        "IRB",
+        "GCP",
+        "research operations",
+        "public health",
+        "epidemiology",
+        "population health",
+        "biostatistics"
+      ],
+      "apply_url": "https://example.test/isolation/CLINICAL/5",
+      "source_url": "https://example.test/isolation/CLINICAL/5"
+    },
+    {
+      "external_id": "isolation-CLINICAL-6",
+      "source": "fictional_isolation",
+      "company": "Fictional CLINICAL Research Group 6",
+      "title": "Research Program Coordinator",
+      "description": "Verified role requirements: clinical research, clinical trials, oncology, cancer, protocol, participant screening, regulatory documentation, IRB, GCP, research operations, public health, epidemiology, population health, biostatistics.",
+      "requirements": [
+        "clinical research",
+        "clinical trials",
+        "oncology",
+        "cancer",
+        "protocol",
+        "participant screening",
+        "regulatory documentation",
+        "IRB",
+        "GCP",
+        "research operations",
+        "public health",
+        "epidemiology",
+        "population health",
+        "biostatistics"
+      ],
+      "apply_url": "https://example.test/isolation/CLINICAL/6",
+      "source_url": "https://example.test/isolation/CLINICAL/6"
+    },
+    {
+      "external_id": "isolation-CLINICAL-7",
+      "source": "fictional_isolation",
+      "company": "Fictional CLINICAL Research Group 7",
+      "title": "Public Health Analyst",
+      "description": "Verified role requirements: clinical research, clinical trials, oncology, cancer, protocol, participant screening, regulatory documentation, IRB, GCP, research operations, public health, epidemiology, population health, biostatistics.",
+      "requirements": [
+        "clinical research",
+        "clinical trials",
+        "oncology",
+        "cancer",
+        "protocol",
+        "participant screening",
+        "regulatory documentation",
+        "IRB",
+        "GCP",
+        "research operations",
+        "public health",
+        "epidemiology",
+        "population health",
+        "biostatistics"
+      ],
+      "apply_url": "https://example.test/isolation/CLINICAL/7",
+      "source_url": "https://example.test/isolation/CLINICAL/7"
+    },
+    {
+      "external_id": "isolation-CLINICAL-8",
+      "source": "fictional_isolation",
+      "company": "Fictional CLINICAL Research Group 8",
+      "title": "Epidemiology Research Associate",
+      "description": "Verified role requirements: clinical research, clinical trials, oncology, cancer, protocol, participant screening, regulatory documentation, IRB, GCP, research operations, public health, epidemiology, population health, biostatistics.",
+      "requirements": [
+        "clinical research",
+        "clinical trials",
+        "oncology",
+        "cancer",
+        "protocol",
+        "participant screening",
+        "regulatory documentation",
+        "IRB",
+        "GCP",
+        "research operations",
+        "public health",
+        "epidemiology",
+        "population health",
+        "biostatistics"
+      ],
+      "apply_url": "https://example.test/isolation/CLINICAL/8",
+      "source_url": "https://example.test/isolation/CLINICAL/8"
+    },
+    {
+      "external_id": "isolation-CLINICAL-9",
+      "source": "fictional_isolation",
+      "company": "Fictional CLINICAL Research Group 9",
+      "title": "Clinical Trial Manager",
+      "description": "Verified role requirements: clinical research, clinical trials, oncology, cancer, protocol, participant screening, regulatory documentation, IRB, GCP, research operations, public health, epidemiology, population health, biostatistics.",
+      "requirements": [
+        "clinical research",
+        "clinical trials",
+        "oncology",
+        "cancer",
+        "protocol",
+        "participant screening",
+        "regulatory documentation",
+        "IRB",
+        "GCP",
+        "research operations",
+        "public health",
+        "epidemiology",
+        "population health",
+        "biostatistics"
+      ],
+      "apply_url": "https://example.test/isolation/CLINICAL/9",
+      "source_url": "https://example.test/isolation/CLINICAL/9"
+    },
+    {
+      "external_id": "isolation-CLINICAL-10",
+      "source": "fictional_isolation",
+      "company": "Fictional CLINICAL Research Group 10",
+      "title": "Clinical Research Coordinator",
+      "description": "Verified role requirements: clinical research, clinical trials, oncology, cancer, protocol, participant screening, regulatory documentation, IRB, GCP, research operations, public health, epidemiology, population health, biostatistics.",
+      "requirements": [
+        "clinical research",
+        "clinical trials",
+        "oncology",
+        "cancer",
+        "protocol",
+        "participant screening",
+        "regulatory documentation",
+        "IRB",
+        "GCP",
+        "research operations",
+        "public health",
+        "epidemiology",
+        "population health",
+        "biostatistics"
+      ],
+      "apply_url": "https://example.test/isolation/CLINICAL/10",
+      "source_url": "https://example.test/isolation/CLINICAL/10"
+    },
+    {
+      "external_id": "isolation-CLINICAL-11",
+      "source": "fictional_isolation",
+      "company": "Fictional CLINICAL Research Group 11",
+      "title": "Senior Clinical Research Coordinator",
+      "description": "Verified role requirements: clinical research, clinical trials, oncology, cancer, protocol, participant screening, regulatory documentation, IRB, GCP, research operations, public health, epidemiology, population health, biostatistics.",
+      "requirements": [
+        "clinical research",
+        "clinical trials",
+        "oncology",
+        "cancer",
+        "protocol",
+        "participant screening",
+        "regulatory documentation",
+        "IRB",
+        "GCP",
+        "research operations",
+        "public health",
+        "epidemiology",
+        "population health",
+        "biostatistics"
+      ],
+      "apply_url": "https://example.test/isolation/CLINICAL/11",
+      "source_url": "https://example.test/isolation/CLINICAL/11"
+    },
+    {
+      "external_id": "isolation-CLINICAL-12",
+      "source": "fictional_isolation",
+      "company": "Fictional CLINICAL Research Group 12",
+      "title": "Clinical Research Associate",
+      "description": "Verified role requirements: clinical research, clinical trials, oncology, cancer, protocol, participant screening, regulatory documentation, IRB, GCP, research operations, public health, epidemiology, population health, biostatistics.",
+      "requirements": [
+        "clinical research",
+        "clinical trials",
+        "oncology",
+        "cancer",
+        "protocol",
+        "participant screening",
+        "regulatory documentation",
+        "IRB",
+        "GCP",
+        "research operations",
+        "public health",
+        "epidemiology",
+        "population health",
+        "biostatistics"
+      ],
+      "apply_url": "https://example.test/isolation/CLINICAL/12",
+      "source_url": "https://example.test/isolation/CLINICAL/12"
+    },
+    {
+      "external_id": "isolation-CLINICAL-13",
+      "source": "fictional_isolation",
+      "company": "Fictional CLINICAL Research Group 13",
+      "title": "Clinical Trials Specialist",
+      "description": "Verified role requirements: clinical research, clinical trials, oncology, cancer, protocol, participant screening, regulatory documentation, IRB, GCP, research operations, public health, epidemiology, population health, biostatistics.",
+      "requirements": [
+        "clinical research",
+        "clinical trials",
+        "oncology",
+        "cancer",
+        "protocol",
+        "participant screening",
+        "regulatory documentation",
+        "IRB",
+        "GCP",
+        "research operations",
+        "public health",
+        "epidemiology",
+        "population health",
+        "biostatistics"
+      ],
+      "apply_url": "https://example.test/isolation/CLINICAL/13",
+      "source_url": "https://example.test/isolation/CLINICAL/13"
+    },
+    {
+      "external_id": "isolation-CLINICAL-14",
+      "source": "fictional_isolation",
+      "company": "Fictional CLINICAL Research Group 14",
+      "title": "Clinical Research Program Manager",
+      "description": "Verified role requirements: clinical research, clinical trials, oncology, cancer, protocol, participant screening, regulatory documentation, IRB, GCP, research operations, public health, epidemiology, population health, biostatistics.",
+      "requirements": [
+        "clinical research",
+        "clinical trials",
+        "oncology",
+        "cancer",
+        "protocol",
+        "participant screening",
+        "regulatory documentation",
+        "IRB",
+        "GCP",
+        "research operations",
+        "public health",
+        "epidemiology",
+        "population health",
+        "biostatistics"
+      ],
+      "apply_url": "https://example.test/isolation/CLINICAL/14",
+      "source_url": "https://example.test/isolation/CLINICAL/14"
+    },
+    {
+      "external_id": "isolation-CLINICAL-15",
+      "source": "fictional_isolation",
+      "company": "Fictional CLINICAL Research Group 15",
+      "title": "Oncology Research Coordinator",
+      "description": "Verified role requirements: clinical research, clinical trials, oncology, cancer, protocol, participant screening, regulatory documentation, IRB, GCP, research operations, public health, epidemiology, population health, biostatistics.",
+      "requirements": [
+        "clinical research",
+        "clinical trials",
+        "oncology",
+        "cancer",
+        "protocol",
+        "participant screening",
+        "regulatory documentation",
+        "IRB",
+        "GCP",
+        "research operations",
+        "public health",
+        "epidemiology",
+        "population health",
+        "biostatistics"
+      ],
+      "apply_url": "https://example.test/isolation/CLINICAL/15",
+      "source_url": "https://example.test/isolation/CLINICAL/15"
+    },
+    {
+      "external_id": "isolation-CLINICAL-16",
+      "source": "fictional_isolation",
+      "company": "Fictional CLINICAL Research Group 16",
+      "title": "Research Program Coordinator",
+      "description": "Verified role requirements: clinical research, clinical trials, oncology, cancer, protocol, participant screening, regulatory documentation, IRB, GCP, research operations, public health, epidemiology, population health, biostatistics.",
+      "requirements": [
+        "clinical research",
+        "clinical trials",
+        "oncology",
+        "cancer",
+        "protocol",
+        "participant screening",
+        "regulatory documentation",
+        "IRB",
+        "GCP",
+        "research operations",
+        "public health",
+        "epidemiology",
+        "population health",
+        "biostatistics"
+      ],
+      "apply_url": "https://example.test/isolation/CLINICAL/16",
+      "source_url": "https://example.test/isolation/CLINICAL/16"
+    },
+    {
+      "external_id": "isolation-CLINICAL-17",
+      "source": "fictional_isolation",
+      "company": "Fictional CLINICAL Research Group 17",
+      "title": "Public Health Analyst",
+      "description": "Verified role requirements: clinical research, clinical trials, oncology, cancer, protocol, participant screening, regulatory documentation, IRB, GCP, research operations, public health, epidemiology, population health, biostatistics.",
+      "requirements": [
+        "clinical research",
+        "clinical trials",
+        "oncology",
+        "cancer",
+        "protocol",
+        "participant screening",
+        "regulatory documentation",
+        "IRB",
+        "GCP",
+        "research operations",
+        "public health",
+        "epidemiology",
+        "population health",
+        "biostatistics"
+      ],
+      "apply_url": "https://example.test/isolation/CLINICAL/17",
+      "source_url": "https://example.test/isolation/CLINICAL/17"
+    },
+    {
+      "external_id": "isolation-CLINICAL-18",
+      "source": "fictional_isolation",
+      "company": "Fictional CLINICAL Research Group 18",
+      "title": "Epidemiology Research Associate",
+      "description": "Verified role requirements: clinical research, clinical trials, oncology, cancer, protocol, participant screening, regulatory documentation, IRB, GCP, research operations, public health, epidemiology, population health, biostatistics.",
+      "requirements": [
+        "clinical research",
+        "clinical trials",
+        "oncology",
+        "cancer",
+        "protocol",
+        "participant screening",
+        "regulatory documentation",
+        "IRB",
+        "GCP",
+        "research operations",
+        "public health",
+        "epidemiology",
+        "population health",
+        "biostatistics"
+      ],
+      "apply_url": "https://example.test/isolation/CLINICAL/18",
+      "source_url": "https://example.test/isolation/CLINICAL/18"
+    },
+    {
+      "external_id": "isolation-CLINICAL-19",
+      "source": "fictional_isolation",
+      "company": "Fictional CLINICAL Research Group 19",
+      "title": "Clinical Trial Manager",
+      "description": "Verified role requirements: clinical research, clinical trials, oncology, cancer, protocol, participant screening, regulatory documentation, IRB, GCP, research operations, public health, epidemiology, population health, biostatistics.",
+      "requirements": [
+        "clinical research",
+        "clinical trials",
+        "oncology",
+        "cancer",
+        "protocol",
+        "participant screening",
+        "regulatory documentation",
+        "IRB",
+        "GCP",
+        "research operations",
+        "public health",
+        "epidemiology",
+        "population health",
+        "biostatistics"
+      ],
+      "apply_url": "https://example.test/isolation/CLINICAL/19",
+      "source_url": "https://example.test/isolation/CLINICAL/19"
+    },
+    {
+      "external_id": "isolation-PRODUCT-0",
+      "source": "fictional_isolation",
+      "company": "Fictional PRODUCT Research Group 0",
+      "title": "Senior Product Manager",
+      "description": "Verified role requirements: product management, product manager, roadmap, product strategy, product launch, user research, product discovery, prioritization, go-to-market.",
+      "requirements": [
+        "product management",
+        "product manager",
+        "roadmap",
+        "product strategy",
+        "product launch",
+        "user research",
+        "product discovery",
+        "prioritization",
+        "go-to-market"
+      ],
+      "apply_url": "https://example.test/isolation/PRODUCT/0",
+      "source_url": "https://example.test/isolation/PRODUCT/0"
+    },
+    {
+      "external_id": "isolation-PRODUCT-1",
+      "source": "fictional_isolation",
+      "company": "Fictional PRODUCT Research Group 1",
+      "title": "Staff Product Manager",
+      "description": "Verified role requirements: product management, product manager, roadmap, product strategy, product launch, user research, product discovery, prioritization, go-to-market.",
+      "requirements": [
+        "product management",
+        "product manager",
+        "roadmap",
+        "product strategy",
+        "product launch",
+        "user research",
+        "product discovery",
+        "prioritization",
+        "go-to-market"
+      ],
+      "apply_url": "https://example.test/isolation/PRODUCT/1",
+      "source_url": "https://example.test/isolation/PRODUCT/1"
+    },
+    {
+      "external_id": "isolation-PRODUCT-2",
+      "source": "fictional_isolation",
+      "company": "Fictional PRODUCT Research Group 2",
+      "title": "Group Product Manager",
+      "description": "Verified role requirements: product management, product manager, roadmap, product strategy, product launch, user research, product discovery, prioritization, go-to-market.",
+      "requirements": [
+        "product management",
+        "product manager",
+        "roadmap",
+        "product strategy",
+        "product launch",
+        "user research",
+        "product discovery",
+        "prioritization",
+        "go-to-market"
+      ],
+      "apply_url": "https://example.test/isolation/PRODUCT/2",
+      "source_url": "https://example.test/isolation/PRODUCT/2"
+    },
+    {
+      "external_id": "isolation-PRODUCT-3",
+      "source": "fictional_isolation",
+      "company": "Fictional PRODUCT Research Group 3",
+      "title": "Product Manager",
+      "description": "Verified role requirements: product management, product manager, roadmap, product strategy, product launch, user research, product discovery, prioritization, go-to-market.",
+      "requirements": [
+        "product management",
+        "product manager",
+        "roadmap",
+        "product strategy",
+        "product launch",
+        "user research",
+        "product discovery",
+        "prioritization",
+        "go-to-market"
+      ],
+      "apply_url": "https://example.test/isolation/PRODUCT/3",
+      "source_url": "https://example.test/isolation/PRODUCT/3"
+    },
+    {
+      "external_id": "isolation-PRODUCT-4",
+      "source": "fictional_isolation",
+      "company": "Fictional PRODUCT Research Group 4",
+      "title": "Senior Product Manager",
+      "description": "Verified role requirements: product management, product manager, roadmap, product strategy, product launch, user research, product discovery, prioritization, go-to-market.",
+      "requirements": [
+        "product management",
+        "product manager",
+        "roadmap",
+        "product strategy",
+        "product launch",
+        "user research",
+        "product discovery",
+        "prioritization",
+        "go-to-market"
+      ],
+      "apply_url": "https://example.test/isolation/PRODUCT/4",
+      "source_url": "https://example.test/isolation/PRODUCT/4"
+    },
+    {
+      "external_id": "isolation-PRODUCT-5",
+      "source": "fictional_isolation",
+      "company": "Fictional PRODUCT Research Group 5",
+      "title": "Staff Product Manager",
+      "description": "Verified role requirements: product management, product manager, roadmap, product strategy, product launch, user research, product discovery, prioritization, go-to-market.",
+      "requirements": [
+        "product management",
+        "product manager",
+        "roadmap",
+        "product strategy",
+        "product launch",
+        "user research",
+        "product discovery",
+        "prioritization",
+        "go-to-market"
+      ],
+      "apply_url": "https://example.test/isolation/PRODUCT/5",
+      "source_url": "https://example.test/isolation/PRODUCT/5"
+    },
+    {
+      "external_id": "isolation-PRODUCT-6",
+      "source": "fictional_isolation",
+      "company": "Fictional PRODUCT Research Group 6",
+      "title": "Group Product Manager",
+      "description": "Verified role requirements: product management, product manager, roadmap, product strategy, product launch, user research, product discovery, prioritization, go-to-market.",
+      "requirements": [
+        "product management",
+        "product manager",
+        "roadmap",
+        "product strategy",
+        "product launch",
+        "user research",
+        "product discovery",
+        "prioritization",
+        "go-to-market"
+      ],
+      "apply_url": "https://example.test/isolation/PRODUCT/6",
+      "source_url": "https://example.test/isolation/PRODUCT/6"
+    },
+    {
+      "external_id": "isolation-PRODUCT-7",
+      "source": "fictional_isolation",
+      "company": "Fictional PRODUCT Research Group 7",
+      "title": "Product Manager",
+      "description": "Verified role requirements: product management, product manager, roadmap, product strategy, product launch, user research, product discovery, prioritization, go-to-market.",
+      "requirements": [
+        "product management",
+        "product manager",
+        "roadmap",
+        "product strategy",
+        "product launch",
+        "user research",
+        "product discovery",
+        "prioritization",
+        "go-to-market"
+      ],
+      "apply_url": "https://example.test/isolation/PRODUCT/7",
+      "source_url": "https://example.test/isolation/PRODUCT/7"
+    },
+    {
+      "external_id": "isolation-PRODUCT-8",
+      "source": "fictional_isolation",
+      "company": "Fictional PRODUCT Research Group 8",
+      "title": "Senior Product Manager",
+      "description": "Verified role requirements: product management, product manager, roadmap, product strategy, product launch, user research, product discovery, prioritization, go-to-market.",
+      "requirements": [
+        "product management",
+        "product manager",
+        "roadmap",
+        "product strategy",
+        "product launch",
+        "user research",
+        "product discovery",
+        "prioritization",
+        "go-to-market"
+      ],
+      "apply_url": "https://example.test/isolation/PRODUCT/8",
+      "source_url": "https://example.test/isolation/PRODUCT/8"
+    },
+    {
+      "external_id": "isolation-PRODUCT-9",
+      "source": "fictional_isolation",
+      "company": "Fictional PRODUCT Research Group 9",
+      "title": "Staff Product Manager",
+      "description": "Verified role requirements: product management, product manager, roadmap, product strategy, product launch, user research, product discovery, prioritization, go-to-market.",
+      "requirements": [
+        "product management",
+        "product manager",
+        "roadmap",
+        "product strategy",
+        "product launch",
+        "user research",
+        "product discovery",
+        "prioritization",
+        "go-to-market"
+      ],
+      "apply_url": "https://example.test/isolation/PRODUCT/9",
+      "source_url": "https://example.test/isolation/PRODUCT/9"
+    },
+    {
+      "external_id": "isolation-PRODUCT-10",
+      "source": "fictional_isolation",
+      "company": "Fictional PRODUCT Research Group 10",
+      "title": "Group Product Manager",
+      "description": "Verified role requirements: product management, product manager, roadmap, product strategy, product launch, user research, product discovery, prioritization, go-to-market.",
+      "requirements": [
+        "product management",
+        "product manager",
+        "roadmap",
+        "product strategy",
+        "product launch",
+        "user research",
+        "product discovery",
+        "prioritization",
+        "go-to-market"
+      ],
+      "apply_url": "https://example.test/isolation/PRODUCT/10",
+      "source_url": "https://example.test/isolation/PRODUCT/10"
+    },
+    {
+      "external_id": "isolation-PRODUCT-11",
+      "source": "fictional_isolation",
+      "company": "Fictional PRODUCT Research Group 11",
+      "title": "Product Manager",
+      "description": "Verified role requirements: product management, product manager, roadmap, product strategy, product launch, user research, product discovery, prioritization, go-to-market.",
+      "requirements": [
+        "product management",
+        "product manager",
+        "roadmap",
+        "product strategy",
+        "product launch",
+        "user research",
+        "product discovery",
+        "prioritization",
+        "go-to-market"
+      ],
+      "apply_url": "https://example.test/isolation/PRODUCT/11",
+      "source_url": "https://example.test/isolation/PRODUCT/11"
+    },
+    {
+      "external_id": "isolation-PRODUCT-12",
+      "source": "fictional_isolation",
+      "company": "Fictional PRODUCT Research Group 12",
+      "title": "Senior Product Manager",
+      "description": "Verified role requirements: product management, product manager, roadmap, product strategy, product launch, user research, product discovery, prioritization, go-to-market.",
+      "requirements": [
+        "product management",
+        "product manager",
+        "roadmap",
+        "product strategy",
+        "product launch",
+        "user research",
+        "product discovery",
+        "prioritization",
+        "go-to-market"
+      ],
+      "apply_url": "https://example.test/isolation/PRODUCT/12",
+      "source_url": "https://example.test/isolation/PRODUCT/12"
+    },
+    {
+      "external_id": "isolation-PRODUCT-13",
+      "source": "fictional_isolation",
+      "company": "Fictional PRODUCT Research Group 13",
+      "title": "Staff Product Manager",
+      "description": "Verified role requirements: product management, product manager, roadmap, product strategy, product launch, user research, product discovery, prioritization, go-to-market.",
+      "requirements": [
+        "product management",
+        "product manager",
+        "roadmap",
+        "product strategy",
+        "product launch",
+        "user research",
+        "product discovery",
+        "prioritization",
+        "go-to-market"
+      ],
+      "apply_url": "https://example.test/isolation/PRODUCT/13",
+      "source_url": "https://example.test/isolation/PRODUCT/13"
+    },
+    {
+      "external_id": "isolation-PRODUCT-14",
+      "source": "fictional_isolation",
+      "company": "Fictional PRODUCT Research Group 14",
+      "title": "Group Product Manager",
+      "description": "Verified role requirements: product management, product manager, roadmap, product strategy, product launch, user research, product discovery, prioritization, go-to-market.",
+      "requirements": [
+        "product management",
+        "product manager",
+        "roadmap",
+        "product strategy",
+        "product launch",
+        "user research",
+        "product discovery",
+        "prioritization",
+        "go-to-market"
+      ],
+      "apply_url": "https://example.test/isolation/PRODUCT/14",
+      "source_url": "https://example.test/isolation/PRODUCT/14"
+    },
+    {
+      "external_id": "isolation-PRODUCT-15",
+      "source": "fictional_isolation",
+      "company": "Fictional PRODUCT Research Group 15",
+      "title": "Product Manager",
+      "description": "Verified role requirements: product management, product manager, roadmap, product strategy, product launch, user research, product discovery, prioritization, go-to-market.",
+      "requirements": [
+        "product management",
+        "product manager",
+        "roadmap",
+        "product strategy",
+        "product launch",
+        "user research",
+        "product discovery",
+        "prioritization",
+        "go-to-market"
+      ],
+      "apply_url": "https://example.test/isolation/PRODUCT/15",
+      "source_url": "https://example.test/isolation/PRODUCT/15"
+    },
+    {
+      "external_id": "isolation-PRODUCT-16",
+      "source": "fictional_isolation",
+      "company": "Fictional PRODUCT Research Group 16",
+      "title": "Senior Product Manager",
+      "description": "Verified role requirements: product management, product manager, roadmap, product strategy, product launch, user research, product discovery, prioritization, go-to-market.",
+      "requirements": [
+        "product management",
+        "product manager",
+        "roadmap",
+        "product strategy",
+        "product launch",
+        "user research",
+        "product discovery",
+        "prioritization",
+        "go-to-market"
+      ],
+      "apply_url": "https://example.test/isolation/PRODUCT/16",
+      "source_url": "https://example.test/isolation/PRODUCT/16"
+    },
+    {
+      "external_id": "isolation-PRODUCT-17",
+      "source": "fictional_isolation",
+      "company": "Fictional PRODUCT Research Group 17",
+      "title": "Staff Product Manager",
+      "description": "Verified role requirements: product management, product manager, roadmap, product strategy, product launch, user research, product discovery, prioritization, go-to-market.",
+      "requirements": [
+        "product management",
+        "product manager",
+        "roadmap",
+        "product strategy",
+        "product launch",
+        "user research",
+        "product discovery",
+        "prioritization",
+        "go-to-market"
+      ],
+      "apply_url": "https://example.test/isolation/PRODUCT/17",
+      "source_url": "https://example.test/isolation/PRODUCT/17"
+    },
+    {
+      "external_id": "isolation-PRODUCT-18",
+      "source": "fictional_isolation",
+      "company": "Fictional PRODUCT Research Group 18",
+      "title": "Group Product Manager",
+      "description": "Verified role requirements: product management, product manager, roadmap, product strategy, product launch, user research, product discovery, prioritization, go-to-market.",
+      "requirements": [
+        "product management",
+        "product manager",
+        "roadmap",
+        "product strategy",
+        "product launch",
+        "user research",
+        "product discovery",
+        "prioritization",
+        "go-to-market"
+      ],
+      "apply_url": "https://example.test/isolation/PRODUCT/18",
+      "source_url": "https://example.test/isolation/PRODUCT/18"
+    },
+    {
+      "external_id": "isolation-PRODUCT-19",
+      "source": "fictional_isolation",
+      "company": "Fictional PRODUCT Research Group 19",
+      "title": "Product Manager",
+      "description": "Verified role requirements: product management, product manager, roadmap, product strategy, product launch, user research, product discovery, prioritization, go-to-market.",
+      "requirements": [
+        "product management",
+        "product manager",
+        "roadmap",
+        "product strategy",
+        "product launch",
+        "user research",
+        "product discovery",
+        "prioritization",
+        "go-to-market"
+      ],
+      "apply_url": "https://example.test/isolation/PRODUCT/19",
+      "source_url": "https://example.test/isolation/PRODUCT/19"
+    },
+    {
+      "external_id": "isolation-OTHER-0",
+      "source": "fictional_isolation",
+      "company": "Fictional Other Group",
+      "title": "Software Engineer",
+      "description": "software engineering system administration storage infrastructure customer data platform problem requirements",
+      "apply_url": "https://example.test/isolation/other/0",
+      "source_url": "https://example.test/isolation/other/0"
+    },
+    {
+      "external_id": "isolation-OTHER-1",
+      "source": "fictional_isolation",
+      "company": "Fictional Other Group",
+      "title": "Software Engineering Intern",
+      "description": "software engineering system administration storage infrastructure customer data platform problem requirements",
+      "apply_url": "https://example.test/isolation/other/1",
+      "source_url": "https://example.test/isolation/other/1"
+    },
+    {
+      "external_id": "isolation-OTHER-2",
+      "source": "fictional_isolation",
+      "company": "Fictional Other Group",
+      "title": "Storage Administrator",
+      "description": "software engineering system administration storage infrastructure customer data platform problem requirements",
+      "apply_url": "https://example.test/isolation/other/2",
+      "source_url": "https://example.test/isolation/other/2"
+    },
+    {
+      "external_id": "isolation-shared",
+      "source": "fictional_isolation",
+      "company": "Fictional Shared Research Group",
+      "title": "Staff Product Manager, Research Platforms",
+      "description": "machine learning, retrieval, search ranking, pytorch, tensorflow, nlp, llm, python, clinical research, clinical trials, oncology, cancer, protocol, participant screening, regulatory documentation, IRB, GCP, research operations, public health, epidemiology, population health, biostatistics, product management, product manager, roadmap, product strategy, product launch, user research, product discovery, prioritization, go-to-market",
+      "apply_url": "https://example.test/isolation/shared",
+      "source_url": "https://example.test/isolation/shared"
+    }
+  ]
+}

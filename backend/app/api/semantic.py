@@ -44,7 +44,16 @@ def analyze_job(job_id:int,request:AnalysisRequest,db:Session=Depends(get_db)):
 @router.get("/jobs/{job_id}/analysis",response_model=SemanticFitReport)
 def get_analysis(job_id:int,db:Session=Depends(get_db)):
     record=db.scalar(select(SemanticAnalysisRecord).where(SemanticAnalysisRecord.job_id==job_id).order_by(SemanticAnalysisRecord.created_at.desc()))
-    if not record:raise HTTPException(404,"Semantic analysis not found")
+    from app.services.candidate_context_service import current_context, job_version
+    context = current_context()
+    job_record = JobService().get(db, job_id)
+    if not record or not job_record or context.pending or record.report_json.get("job_version") != job_version(job_record):
+        raise HTTPException(404,"Current candidate semantic analysis not found")
+    try:
+        context.validate_evidence(record.report_json.get("evidence_ids", []))
+        for strength in record.report_json.get("strengths", []): context.validate_evidence(strength.get("evidence_ids", []))
+    except ValueError as exc:
+        raise HTTPException(404,"Current candidate semantic analysis not found") from exc
     return SemanticFitReport.model_validate(record.report_json)
 
 @router.post("/jobs/{job_id}/research",response_model=ResearchResponse)

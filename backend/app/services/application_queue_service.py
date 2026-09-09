@@ -16,7 +16,7 @@ class ApplicationQueueService:
   blockers=[] if package.status in {"READY_FOR_REVIEW","APPROVED"} else ["PACKAGE_REVIEW_NOT_PASSED"]
   submission_lock=SubmissionStateService().lockout_reason(db,job_id)
   if submission_lock:blockers.append(submission_lock)
-  if db.get(JobExclusionRecord,job_id):blockers.append("JOB_NEVER_APPLY")
+  if db.scalar(select(JobExclusionRecord).where(JobExclusionRecord.job_id==job_id)):blockers.append("JOB_NEVER_APPLY")
   if job.company.casefold() in {x.casefold() for x in self.policy.excluded_companies}:blockers.append("COMPANY_EXCLUDED")
   text=f"{job.title} {job.description}".casefold()
   if any(keyword.casefold() in text for keyword in self.policy.excluded_keywords):blockers.append("ROLE_EXCLUDED")
@@ -26,7 +26,7 @@ class ApplicationQueueService:
  def can_submit(self,db,job):
   midnight=datetime.combine(datetime.now(timezone.utc).date(),datetime.min.time());total=db.scalar(select(func.count()).select_from(ApplicationReceiptRecord).where(ApplicationReceiptRecord.submitted_at>=midnight)) or 0;company=db.scalar(select(func.count()).select_from(ApplicationReceiptRecord).where(ApplicationReceiptRecord.company==job.company,ApplicationReceiptRecord.submitted_at>=midnight)) or 0
   last=db.scalar(select(ApplicationReceiptRecord).order_by(ApplicationReceiptRecord.submitted_at.desc()).limit(1));spacing=not last or (datetime.now(timezone.utc)-last.submitted_at.replace(tzinfo=timezone.utc) if last.submitted_at.tzinfo is None else datetime.now(timezone.utc)-last.submitted_at).total_seconds()>=get_settings().auto_apply_min_interval_seconds
-  return not RuntimeControlService().paused(db) and not db.get(JobExclusionRecord,job.id) and total<self.policy.daily_application_cap and company<self.policy.company_daily_cap and spacing and not SubmissionStateService().lockout_reason(db,job.id)
+  return not RuntimeControlService().paused(db) and not db.scalar(select(JobExclusionRecord).where(JobExclusionRecord.job_id==job.id)) and total<self.policy.daily_application_cap and company<self.policy.company_daily_cap and spacing and not SubmissionStateService().lockout_reason(db,job.id)
  def process(self,db,handler,limit=25):
   rows=db.scalars(select(ApplicationQueueItemRecord).where(ApplicationQueueItemRecord.status.in_(["QUEUED","RETRYABLE"])).order_by(ApplicationQueueItemRecord.priority.desc()).limit(limit)).all();results=[]
   for row in rows:

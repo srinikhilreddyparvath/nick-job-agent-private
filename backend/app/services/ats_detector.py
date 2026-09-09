@@ -4,7 +4,7 @@ import httpx
 from app.models.detection import AtsDetectionResult
 
 PATTERNS=[
- ("greenhouse",r"(?:boards|job-boards)\.greenhouse\.io/([^/?#\s\"'<>]+)"),("lever",r"jobs\.lever\.co/([^/?#\s\"'<>]+)"),("ashby",r"jobs\.ashbyhq\.com/([^/?#\s\"'<>]+)"),("smartrecruiters",r"jobs\.smartrecruiters\.com/([^/?#\s\"'<>]+)"),("workday",r"([a-z0-9-]+)\.(?:wd\d+\.)?myworkdayjobs\.com/([^/?#\s\"'<>]+)"),("icims",r"careers-[^/]+\.icims\.com"),("jobvite",r"jobs\.jobvite\.com/([^/?#\s\"'<>]+)"),("successfactors",r"career\d*\.successfactors\.(?:com|eu)")]
+ ("greenhouse",r"(?:boards|job-boards)\.greenhouse\.io/([^/?#\s\"'<>]+)"),("lever",r"jobs\.lever\.co/([^/?#\s\"'<>]+)"),("ashby",r"jobs\.ashbyhq\.com/([^/?#\s\"'<>]+)"),("smartrecruiters",r"jobs\.smartrecruiters\.com/([^/?#\s\"'<>]+)"),("workday",r"([a-z0-9-]+)\.(?:wd\d+\.)?myworkdayjobs\.com/([^/?#\s\"'<>]+)"),("workable",r"apply\.workable\.com/([^/?#\s\"'<>]+)"),("bamboohr",r"([a-z0-9-]+)\.bamboohr\.com"),("teamtailor",r"([a-z0-9-]+)\.teamtailor\.com"),("recruitee",r"([a-z0-9-]+)\.recruitee\.com"),("icims",r"careers-[^/]+\.icims\.com"),("jobvite",r"jobs\.jobvite\.com/([^/?#\s\"'<>]+)"),("successfactors",r"career\d*\.successfactors\.(?:com|eu)")]
 class AtsDetector:
  def detect(self,company:str,careers_url:str,html:str|None=None,final_url:str|None=None)->AtsDetectionResult:
     detected_urls=[]

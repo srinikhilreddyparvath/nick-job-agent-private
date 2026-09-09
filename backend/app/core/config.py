@@ -5,7 +5,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    app_name: str = "Career Intelligence Agent"
+    app_name: str = "RoleCall"
     database_url: str = "sqlite:///./nick_job_agent.db"
     cors_origins: str = "http://localhost:3000"
     http_timeout_seconds: float = 20.0
@@ -91,6 +91,14 @@ class Settings(BaseSettings):
     discovery_max_sources_per_run: int = 20
     dashboard_max_jobs_per_company: int = 3
     starter_discovery_catalog_path: str = "../data/discovery_sources.example.json"
+    contact_discovery_max_pages_per_job: int = 10
+    contact_discovery_max_contacts: int = 5
+    contact_discovery_timeout_seconds: float = 10
+    contact_discovery_freshness_hours: int = 168
+    contact_discovery_min_relevance_score: float = 28
+    contact_discovery_browser_fallback_enabled: bool = True
+    contact_discovery_browser_max_pages: int = 3
+    contact_discovery_browser_timeout_seconds: float = 15
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 

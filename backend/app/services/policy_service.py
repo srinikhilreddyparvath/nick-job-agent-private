@@ -9,7 +9,12 @@ from app.core.config import get_settings
 
 class AnswerBankService:
     def __init__(self,path:Path|None=None):
-        path=path or _configured_path(get_settings().candidate_answer_bank_path,"answer_bank.example.json"); data=json.loads(path.read_text(encoding="utf-8")); self.sections={k:[ApprovedAnswer.model_validate(x) for x in v] for k,v in data.items()}
+        explicit_path = path is not None
+        path=path or _configured_path(get_settings().candidate_answer_bank_path,"answer_bank.example.json")
+        data=json.loads(path.read_text(encoding="utf-8")) if path.exists() else {"approved_structured":[],"evidence_generated":[],"human_review_required":[]}
+        from app.services.candidate_context_service import read_bundle
+        if not explicit_path and read_bundle(): data = {"approved_structured":[],"evidence_generated":[],"human_review_required":[]}
+        self.sections={k:[ApprovedAnswer.model_validate(x) for x in v] for k,v in data.items()}
         identity = IdentityService()
         identity_answers = []
         for answer_id, question, label, evidence_ids in (

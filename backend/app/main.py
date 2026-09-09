@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api import agents, applications, application_packages, browser_applications, career_intelligence, companies, feedback, jobs, onboarding, operations, profile, scans, sources, semantic
+from app.api import agents, applications, application_packages, browser_applications, career_intelligence, companies, contacts, feedback, jobs, onboarding, operations, profile, scans, sources, semantic
 from app.core.config import get_settings
 from app.db.database import init_db
 
@@ -33,6 +33,7 @@ app.include_router(browser_applications.router)
 app.include_router(operations.router)
 app.include_router(onboarding.router)
 app.include_router(career_intelligence.router)
+app.include_router(contacts.router)
 
 
 @app.get("/health", tags=["system"])

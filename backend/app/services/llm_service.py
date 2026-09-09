@@ -10,8 +10,20 @@ from pydantic import BaseModel, ValidationError
 from app.core.config import Settings, get_settings
 from app.models.semantic import AgentToolDecision, JobResearchReport, LLMResponse, LLMUsage, SemanticFitReport, SemanticRoleClassification
 from app.models.application_package import ApplicationDraft,ApplicationGenerationDraft,ApplicationReview
+from app.security.external_content import EXTERNAL_CONTENT_POLICY
 
 T=TypeVar("T",bound=BaseModel)
+
+def _secure_task_payload(user:str)->str:
+    try:value=json.loads(user)
+    except json.JSONDecodeError:value=user
+    if isinstance(value,dict) and "untrusted_data" in value:return user
+    return json.dumps({"trusted_context":{},"untrusted_data":{"task_payload":value}},ensure_ascii=False,default=str)
+
+def _task_context(user:str):
+    value=json.loads(user)
+    if isinstance(value,dict):return (value.get("untrusted_data") or {}).get("task_payload",value)
+    return value
 
 
 class LLMError(RuntimeError): pass
@@ -19,6 +31,9 @@ class StructuredOutputError(LLMError): pass
 class OutputTruncatedError(StructuredOutputError): pass
 class ProviderTimeoutError(LLMError): pass
 class ProviderUnavailableError(LLMError): pass
+class ProviderHTTPError(LLMError):
+    def __init__(self,message:str,status_code:int):super().__init__(message);self.status_code=status_code
+class ModelRefusalError(LLMError): pass
 
 
 def _strict_json_schema(schema:type[BaseModel])->dict:
@@ -55,24 +70,31 @@ class MockLLMProvider(LLMProvider):
     def generate(self,system,user,schema,*,max_tokens,temperature=0):
         if schema.__name__ in self.responses: payload=self.responses[schema.__name__]
         elif schema is AgentToolDecision:
-            context=json.loads(user);state=context.get("state",{})
+            context=_task_context(user);state=context.get("state",{})
             if not state.get("tool_outputs"):
                 tool=context["allowed_tools"][0];payload={"action":"tool","tool_name":tool,"arguments":context.get("suggested_arguments",{}).get(tool,{})}
             else:payload={"action":"final","final_state":{"completed":True}}
         elif schema is SemanticRoleClassification: payload={"role_family":"UNKNOWN","confidence":0.45,"reasoning":"Mock classifier retains uncertainty.","signals":[]}
         elif schema is JobResearchReport:
-            context=json.loads(user); payload={"job_id":context["job_id"],"company_summary":"Based only on the supplied job and company data.","role_summary":context["title"],"key_requirements":context.get("requirements",[]),"source_citations":context.get("sources",[])}
+            context=_task_context(user); payload={"job_id":context["job_id"],"company_summary":"Based only on the supplied job and company data.","role_summary":context["title"],"key_requirements":context.get("requirements",[]),"source_citations":context.get("sources",[])}
         elif schema is SemanticFitReport:
-            context=json.loads(user); evidence=context.get("evidence",[]); cited=evidence[:2]; score=float(context.get("deterministic_score") or 60)
+            context=_task_context(user); evidence=context.get("evidence",[]); cited=evidence[:2]; score=float(context.get("deterministic_score") or 60)
             payload={"job_id":context["job_id"],"role_family":context["role_family"],"semantic_fit_score":min(100,score+3),"confidence":.78,"strengths":[{"statement":x["statement"],"evidence_ids":[x["id"]]} for x in cited],"gaps":["Requirements without direct canonical evidence remain unverified."],"requirement_matches":[],"requirement_gaps":[],"evidence_ids":[x["id"] for x in cited],"career_transition_analysis":context.get("career_transition_notes"),"research_alignment":"Assessed from cited evidence only.","technical_alignment":"Assessed from cited evidence only.","experience_alignment":"Assessed from cited evidence only.","recommended_action":"review","reasoning_summary":"Mock semantic analysis grounded in retrieved evidence.","unsupported_claims":[],"requires_human_review":False}
         elif schema in (ApplicationDraft,ApplicationGenerationDraft):
-            c=json.loads(user);ev=c["evidence"];first=ev[0];questions=c.get("questions",[])
-            payload={"strategy":{"job_id":c["job_id"],"target_role_family":c["role_family"],"primary_positioning":"Evidence-grounded search and ML research professional","top_3_themes":["search and retrieval","evaluation","cross-functional ML"],"top_requirements_to_emphasize":["search quality"],"known_gaps":["Unsupported requirements remain gaps"],"resume_emphasis":["verified search work"],"resume_deemphasis":[],"cover_letter_recommended":False,"application_risk":"medium","recommended_action":"human_review"},"requirements":c.get("requirements",[]),"summary":[{"text":first["statement"],"evidence_ids":[first["id"]]}],"resume_bullets":[{"id":"BULLET_001","section":"experience","employer_or_context":f'{first.get("company") or "Professional Experience"} | {first.get("role") or ""}',"generated_text":first["statement"],"source_evidence_ids":[first["id"]],"source_resume_text":first["statement"],"transformation_type":"UNCHANGED"}],"skills":[{"text":skill,"evidence_ids":[x["id"]]} for x in ev for skill in x.get("skills",[])][:12],"application_answers":[{"id":f'ANSWER_{i+1:03}',"question_text":q["question_text"],"required":q.get("required",True),"detected_category":"experience","answer":first["statement"],"original_model_answer":first["statement"],"answer_status":"DRAFT","answer_type":"EVIDENCE_GENERATED","evidence_ids":[first["id"]],"confidence":.8,"requires_human_review":False,"reusable":False} for i,q in enumerate(questions)],"cover_letter":None,"cover_letter_evidence_ids":[],"recruiter_summary":[{"text":first["statement"],"evidence_ids":[first["id"]]}]}
+            c=_task_context(user);ev=c["evidence"];first=ev[0];questions=c.get("questions",[])
+            requirements=c.get("requirements",[])
+            payload={"strategy":{"job_id":c["job_id"],"target_role_family":c["role_family"],"primary_positioning":"Evidence-grounded candidate","top_3_themes":["relevant experience","demonstrated skills","role alignment"],"top_requirements_to_emphasize":requirements[:1],"known_gaps":["Unsupported requirements remain gaps"],"resume_emphasis":["verified candidate evidence"],"resume_deemphasis":[],"cover_letter_recommended":False,"application_risk":"medium","recommended_action":"human_review"},"requirements":requirements,"summary":[{"text":first["statement"],"evidence_ids":[first["id"]]}],"resume_bullets":[{"id":"BULLET_001","section":"experience","employer_or_context":f'{first.get("company") or "Professional Experience"} | {first.get("role") or ""}',"generated_text":first["statement"],"source_evidence_ids":[first["id"]],"source_resume_text":first["statement"],"transformation_type":"UNCHANGED"}],"skills":[{"text":skill,"evidence_ids":[x["id"]]} for x in ev for skill in x.get("skills",[])][:12],"application_answers":[{"id":f'ANSWER_{i+1:03}',"question_text":q["question_text"],"required":q.get("required",True),"detected_category":"experience","answer":first["statement"],"original_model_answer":first["statement"],"answer_status":"DRAFT","answer_type":"EVIDENCE_GENERATED","evidence_ids":[first["id"]],"confidence":.8,"requires_human_review":False,"reusable":False} for i,q in enumerate(questions)],"cover_letter":None,"cover_letter_evidence_ids":[],"recruiter_summary":[{"text":first["statement"],"evidence_ids":[first["id"]]}]}
         elif schema is ApplicationReview:
-            c=json.loads(user);blocking=c.get("deterministic_findings",[]);payload={"status":"FAIL" if blocking else "PASS","findings":blocking,"reasoning_summary":"Mock independent review completed against canonical evidence and approved policies.","requires_human_review":bool(blocking)}
+            c=_task_context(user);blocking=c.get("deterministic_findings",[]);payload={"status":"FAIL" if blocking else "PASS","findings":blocking,"reasoning_summary":"Mock independent review completed against canonical evidence and approved policies.","requires_human_review":bool(blocking)}
         elif schema.__name__ == "ResumeExtractionPayload":
-            c=json.loads(user);source=c.get("source_document","resume.txt");text=c.get("resume_text","");lines=[line.strip() for line in text.splitlines() if line.strip()];span=next((line for line in lines if len(line)>=20),lines[0] if lines else "")
-            payload={"professional_name":lines[0] if lines else None,"professional_summary":{"value":span,"source_section":"resume","supporting_text":span,"confidence":.8},"employment":[],"skills":[],"education":[],"projects":[],"certifications":[],"domains":[],"technologies":[],"warnings":[]}
+            c=json.loads(user);c=(c.get("untrusted_data") or {}).get("candidate_document",c);source=c.get("source_document","resume.txt");text=c.get("resume_text") or "\n".join((c.get("resume_sections") or {}).values());lines=[line.strip() for line in text.splitlines() if line.strip()];span=next((line for line in lines if len(line)>=20),lines[0] if lines else "")
+            title=lines[1] if len(lines)>1 else ""
+            employer=next((line.split(":",1)[1].strip() for line in lines if line.lower().startswith("employer:")),"")
+            dates=next((line.split(":",1)[1].strip() for line in lines if line.lower().startswith("dates:")),"")
+            skills_line=next((line.split(":",1)[1].strip() for line in lines if line.lower().startswith("skills:")),"")
+            education_line=next((line.split(":",1)[1].strip() for line in lines if line.lower().startswith("education:")),"")
+            narrative=[line for line in lines[2:] if not any(line.lower().startswith(prefix) for prefix in ("employer:","dates:","skills:","education:"))]
+            payload={"professional_name":lines[0] if lines else None,"professional_summary":{"value":span,"source_section":"resume","supporting_text":span,"confidence":.8},"employment":[{"employer":employer,"title":title,"start_date":dates or None,"end_date":None,"location":None,"responsibilities":narrative[:3],"accomplishments":[],"source_section":"resume","supporting_text":"\n".join([title,employer,dates,*narrative[:3]]),"confidence":.8}] if title and employer else [],"skills":[{"value":item.strip(),"source_section":"skills","supporting_text":item.strip(),"confidence":.8} for item in skills_line.split(",") if item.strip()],"education":[{"value":education_line,"source_section":"education","supporting_text":education_line,"confidence":.8}] if education_line else [],"projects":[],"certifications":[],"domains":[],"technologies":[],"warnings":[]}
         else: raise LLMError(f"Mock provider has no response for {schema.__name__}")
         return LLMResponse(content=payload,provider=self.name,model=self.model,latency_ms=1,usage=LLMUsage(input_tokens=max(1,len(user)//4),output_tokens=max(1,len(json.dumps(payload))//4),estimated_cost=0))
 
@@ -90,11 +112,13 @@ class OpenAIProvider(LLMProvider):
         except httpx.HTTPStatusError as exc:
             error=(response.json().get("error") or {}) if response.headers.get("content-type","").startswith("application/json") else {}
             safe=" ".join(f"{key}={error.get(key)}" for key in ("type","code","param","message") if error.get(key))
-            raise StructuredOutputError(f"PROVIDER_REQUEST_FAILED status={response.status_code}{' '+safe if safe else ''}") from exc
+            raise ProviderHTTPError(f"PROVIDER_REQUEST_FAILED status={response.status_code}{' '+safe if safe else ''}",response.status_code) from exc
         data=response.json();usage=data.get("usage",{});cached=(usage.get("input_tokens_details") or {}).get("cached_tokens",0);status=data.get("status");reason=(data.get("incomplete_details") or {}).get("reason")
         if status=="incomplete" or reason=="max_output_tokens":
             raise OutputTruncatedError(f"OUTPUT_TRUNCATED status={status} reason={reason or 'unknown'} output_tokens={usage.get('output_tokens',0)} max_output_tokens={max_tokens}")
-        texts=[content.get("text","") for item in data.get("output",[]) if item.get("type")=="message" for content in item.get("content",[]) if content.get("type")=="output_text"]
+        contents=[content for item in data.get("output",[]) if item.get("type")=="message" for content in item.get("content",[])]
+        if any(content.get("type")=="refusal" for content in contents):raise ModelRefusalError("MODEL_REFUSAL")
+        texts=[content.get("text","") for content in contents if content.get("type")=="output_text"]
         try:payload=json.loads("".join(texts))
         except json.JSONDecodeError as exc:raise StructuredOutputError(f"MALFORMED_STRUCTURED_OUTPUT: {exc}") from exc
         return LLMResponse(content=payload,provider=self.name,model=self.model,latency_ms=int((perf_counter()-started)*1000),usage=LLMUsage(input_tokens=usage.get("input_tokens",0),output_tokens=usage.get("output_tokens",0),cached_tokens=cached),response_status=status,incomplete_reason=reason)
@@ -112,6 +136,7 @@ class AnthropicProvider(LLMProvider):
 class LLMService:
     def __init__(self,provider:LLMProvider,settings:Settings|None=None): self.provider=provider;self.settings=settings or get_settings()
     def generate_structured(self,system:str,user:str,schema:type[T],temperature:float=0,*,max_tokens:int|None=None)->tuple[T,LLMResponse]:
+        if EXTERNAL_CONTENT_POLICY not in system:system=f"{EXTERNAL_CONTENT_POLICY}\n\nTASK:\n{system}"
         last_error=None
         for _ in range(self.settings.llm_max_retries+1):
             try:

@@ -48,3 +48,8 @@ Thumbs.db
 backups/
 *.bak
 *.backup
+
+# Atomic candidate snapshots and pending resume reviews are private runtime data.
+data/*.state.json*
+data/*.pending.json*
+backend/tmp/

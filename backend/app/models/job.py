@@ -91,6 +91,12 @@ class Job(JobBase):
     semantic_provider: str | None = None
     semantic_model: str | None = None
     semantic_estimated_cost: float = 0
+    first_seen_at: datetime | None = None
+    last_seen_at: datetime | None = None
+    last_verified_at: datetime | None = None
+    posting_status: str = "UNKNOWN"
+    posting_confidence: str = "UNKNOWN"
+    posting_confidence_reason: str = "Current availability could not be independently verified."
 
     model_config = ConfigDict(from_attributes=True)
 

@@ -1,0 +1,11 @@
+Taylor Rivera
+Senior Product Manager
+Employer: Northstar Platform Labs
+Dates: March 2020 - Present
+
+Led fictional B2B SaaS platform roadmaps and coordinated engineering, design, analytics, sales, and customer-success partners.
+Designed product experiments, analyzed adoption data, prioritized platform capabilities, and translated customer needs into delivery plans.
+Launched workflow improvements using SQL dashboards and structured customer research.
+
+Skills: product strategy, roadmaps, B2B SaaS, experimentation, analytics, stakeholder management, SQL
+Education: Bachelor of Arts in Economics, Example City University

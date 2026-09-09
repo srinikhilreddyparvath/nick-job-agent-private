@@ -35,7 +35,7 @@ class DiscoveryCatalogService:
             if key in keys:continue
             row=starter_existing.get(key)
             if row is None:
-                row=JobSourceRecord(company=item["company"],ats_type=item["ats_type"],board_identifier=item["board_identifier"],enabled=True,scan_frequency="scheduled",priority="NORMAL",configuration={"origin":"starter_catalog","domains":item.get("domains",[]),"locations":item.get("locations",[])})
+                row=JobSourceRecord(company=item["company"],ats_type=item["ats_type"],board_identifier=item["board_identifier"],careers_url=item.get("website_url"),enabled=True,scan_frequency="scheduled",priority="NORMAL",configuration={"origin":"starter_catalog","domains":item.get("domains",[]),"locations":item.get("locations",[]),"website_url":item.get("website_url")})
                 db.add(row);db.flush()
             selected.append(row);keys.add(key)
         db.commit()

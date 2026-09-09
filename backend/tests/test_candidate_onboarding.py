@@ -12,7 +12,7 @@ from app.models.onboarding import CandidateExtractionDraft, OnboardingApprovalRe
 from app.models.profile import CandidateProfile, EvidenceRecord, JobPreferences, ProfileItem
 from app.services.candidate_extraction_service import CandidateExtractionService, ResumeExtractionError, ResumeTextExtractor
 from app.services.candidate_persistence_service import CandidatePersistenceService
-from app.services.llm_service import LLMService, MockLLMProvider
+from app.services.llm_service import LLMService, MockLLMProvider, OutputTruncatedError, ProviderTimeoutError, StructuredOutputError
 from app.services.llm_service import _strict_json_schema
 from app.services.opportunity_service import ConstraintEngine
 from app.models.job import Job
@@ -47,19 +47,20 @@ def test_txt_upload_extracts_and_stores_private_draft(tmp_path):
 
 def test_docx_parser(tmp_path):
     document=Document();document.add_paragraph(TEXT);stream=io.BytesIO();document.save(stream)
-    text,pages,_=ResumeTextExtractor().extract(stream.getvalue(),"docx")
-    assert "Northstar Labs" in text and pages is None
+    extracted=ResumeTextExtractor().extract(stream.getvalue(),"docx")
+    assert "Northstar Labs" in extracted.text and extracted.page_count is None
 
 
 def test_pdf_parser_textless_is_rejected(tmp_path):
     writer=PdfWriter();writer.add_blank_page(width=100,height=100);stream=io.BytesIO();writer.write(stream)
-    with pytest.raises(ResumeExtractionError,match="no usable text"):service(tmp_path).ingest(upload("resume.pdf",stream.getvalue(),"application/pdf"))
+    with pytest.raises(ResumeExtractionError,match="selectable text"):service(tmp_path).ingest(upload("resume.pdf",stream.getvalue(),"application/pdf"))
+    assert list((tmp_path/"private"/"resumes").glob("*.pdf"))
 
 
 def test_pdf_parser_extracts_text():
     stream=io.BytesIO();pdf=canvas.Canvas(stream);pdf.drawString(72,720,TEXT);pdf.save()
-    text,pages,_=ResumeTextExtractor().extract(stream.getvalue(),"pdf")
-    assert "Northstar Labs" in text and pages==1
+    extracted=ResumeTextExtractor().extract(stream.getvalue(),"pdf")
+    assert "Northstar Labs" in extracted.text and extracted.page_count==1
 
 
 def test_upload_validation_and_empty_files(tmp_path):
@@ -84,7 +85,7 @@ def test_approval_persists_profile_evidence_preferences_and_constraints(tmp_path
     configured=settings(tmp_path);persistence=CandidatePersistenceService(configured)
     evidence=EvidenceRecord(id="E1",category="skills",sub_category="programming",statement="Python",source="resume",source_reference="Skills",verified=False,confidence=.9,supporting_text="Python")
     profile=CandidateProfile(skills=[ProfileItem(value="Python",evidence_ids=["E1"])]);preferences=JobPreferences(locations=["Metro City"],employment_types=["full-time"],remote_allowed=True)
-    state=persistence.approve(OnboardingApprovalRequest(profile=profile,evidence=[evidence],preferences=preferences))
+    state=persistence.approve(OnboardingApprovalRequest(preferences_reviewed=True,confirm_replacement=True,profile=profile,evidence=[evidence],preferences=preferences))
     assert state.configured and state.evidence[0].verified
     assert CandidatePersistenceService(configured).state().preferences.locations==["Metro City"]
     job=Job(external_id="1",source="test",company="Example",title="Engineer",location="Metro City",employment_type=None,description="Python",apply_url="https://example.com/apply",source_url="https://example.com/job")
@@ -111,3 +112,44 @@ def test_candidate_extraction_schema_uses_provider_supported_subset():
                 walk(child)
 
     walk(schema)
+
+
+@pytest.mark.parametrize(("error","category"),[(ProviderTimeoutError("timeout"),"AI_REQUEST_TIMED_OUT"),(OutputTruncatedError("truncated"),"AI_RESPONSE_INCOMPLETE"),(StructuredOutputError("invalid"),"RESUME_STRUCTURE_INVALID")])
+def test_resume_failure_is_safe_and_stored_file_survives(tmp_path,error,category):
+    class FailingProvider(MockLLMProvider):
+        def generate(self,*args,**kwargs):raise error
+    configured=settings(tmp_path);configured.llm_max_retries=0
+    extraction=CandidateExtractionService(LLMService(FailingProvider(),configured),configured)
+    with pytest.raises(type(error)) as caught:extraction.ingest(upload("resume.txt",TEXT.encode(),"text/plain"))
+    assert caught.value.safe_category==category
+    assert len(list((tmp_path/"private"/"resumes").glob("*.txt")))==1
+    status=(tmp_path/"private"/"resume-extraction-status.json").read_text()
+    assert category in status and TEXT not in status
+
+
+def test_retry_uses_stored_resume_without_duplicate_upload(tmp_path):
+    configured=settings(tmp_path);configured.llm_max_retries=0
+    class OnceProvider(MockLLMProvider):
+        def __init__(self):super().__init__(responses={"ResumeExtractionPayload":draft_payload()});self.failed=False
+        def generate(self,*args,**kwargs):
+            if not self.failed:self.failed=True;raise ProviderTimeoutError("timeout")
+            return super().generate(*args,**kwargs)
+    extraction=CandidateExtractionService(LLMService(OnceProvider(),configured),configured)
+    with pytest.raises(ProviderTimeoutError):extraction.ingest(upload("resume.txt",TEXT.encode(),"text/plain"))
+    before=list((tmp_path/"private"/"resumes").iterdir());result=extraction.retry_latest();after=list((tmp_path/"private"/"resumes").iterdir())
+    assert result.draft.profile.identity.display_name=="Alex Morgan" and before==after
+
+def test_granular_grounding_keeps_role_and_drops_only_hallucinated_bullet(tmp_path):
+    text="Alex Morgan\nEXPERIENCE\nNorthstar Labs\nMachine Learning Engineer\nAugust 2025 - Present\nBuilt retrieval evaluation workflows using Python."
+    payload=draft_payload();payload["professional_summary"]=None;payload["employment"]=[{"employer":"Northstar Labs","title":"Machine Learning Engineer","start_date":"August 2025","end_date":"Present","location":None,"responsibilities":["Built retrieval evaluation workflows using Python.","Managed a $5 million program"],"accomplishments":[],"source_section":"Experience","supporting_text":"Northstar Labs Machine Learning Engineer","confidence":.92}]
+    result=service(tmp_path,payload).ingest(upload("resume.txt",text.encode(),"text/plain"))
+    values=[x.value for x in result.draft.profile.experience]
+    assert "Machine Learning Engineer at Northstar Labs" in values
+    assert "Built retrieval evaluation workflows using Python." in values
+    assert "Managed a $5 million program" not in values
+    assert len(result.draft.warnings)<=5
+
+@pytest.mark.parametrize(("source","normalized"),[("August 2025 – Present","August 2025 - Present"),("Built reliable\nretrieval systems","Built reliable retrieval systems"),("• Python","Python")])
+def test_grounding_tolerates_layout_and_unicode_variation(source,normalized):
+    from app.services.candidate_extraction_service import grounding_match
+    assert grounding_match(normalized,source)[0] in {"VERIFIED_FROM_RESUME","LIKELY_FROM_RESUME"}

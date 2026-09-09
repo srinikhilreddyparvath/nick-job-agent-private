@@ -11,7 +11,7 @@ from app.db.models import ApplicationPackageRecord,ApprovedAnswerHistoryRecord
 from app.models.application_package import ApplicationAnswer,ApplicationQuestionInput,PackageGenerateRequest,ResumeBullet,TailoredResumeData
 from app.services.application_package_service import ApplicationPackageService
 from app.services.llm_service import LLMService,MockLLMProvider
-from app.services.policy_service import WorkAuthorizationService
+from app.services.policy_service import AnswerBankService,WorkAuthorizationService
 
 
 QUESTIONS=[
@@ -44,6 +44,11 @@ def test_question_policy_work_authorization_middle_name_years_and_salary():
     for index,text in enumerate(("Middle Name","How many years of experience do you have?","What is your salary history?"),1):
         answer=service._policy_answer(ApplicationQuestionInput(question_text=text),index)
         assert answer.requires_human_review and answer.answer is None
+
+
+def test_fresh_user_answer_bank_starts_empty_instead_of_failing(tmp_path):
+    bank=AnswerBankService(tmp_path/"answer_bank.local.json")
+    assert set(bank.all())=={"approved_structured","evidence_generated","human_review_required"}
 
 
 def test_package_persistence_strategy_provenance_answers_cache_and_pdf(client):

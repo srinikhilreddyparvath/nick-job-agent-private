@@ -13,7 +13,9 @@ class ApplicationWorker:
  def __init__(self,worker_id=None):self.worker_id=worker_id or f"{socket.gethostname()}-{os.getpid()}";self.leases=QueueLeaseService();self.runtime=RuntimeControlService()
  def run_once(self,db):
   settings=get_settings();self.leases.recover(db);self.runtime.heartbeat(db,"worker",self.worker_id)
-  intelligence=CareerIntelligenceService(settings=settings).process_next(db)
+  try:intelligence=CareerIntelligenceService(settings=settings).process_next(db,worker_id=self.worker_id)
+  except Exception as exc:
+   db.rollback();self.runtime.heartbeat(db,"worker",self.worker_id,status="DEGRADED",details={"career_intelligence_error":type(exc).__name__});return {"status":"CAREER_INTELLIGENCE_FAILED","error":type(exc).__name__}
   if intelligence:return {"status":intelligence.status,"career_intelligence_run_id":intelligence.id}
   if settings.application_mode=="manual":return {"status":"IDLE_MANUAL_MODE"}
   if settings.application_mode=="auto_submit":
@@ -34,12 +36,20 @@ class ApplicationWorker:
    mode="AUTO_SUBMIT" if settings.application_mode=="auto_submit" else "FILL_ONLY";result=BrowserOrchestrator().run(db,item.job_id,BrowserRunRequest(mode=mode,dry_run=False))
    status="SUBMITTED" if result.submitted else "NEEDS_REVIEW" if result.status=="SUBMISSION_UNVERIFIED" or result.fields_needing_review or result.blockers else "READY"
    self.leases.release(db,item,status,",".join(result.blockers) or None);self.runtime.heartbeat(db,"worker",self.worker_id,success=True,details={"last_job_id":item.job_id,"last_status":status});return {"job_id":item.job_id,"status":status}
-  except Exception as exc:self.leases.release(db,item,"RETRYABLE",type(exc).__name__);return {"job_id":item.job_id,"status":"RETRYABLE"}
+  except Exception as exc:
+   db.rollback();item=db.get(type(item),item.id)
+   if item:self.leases.release(db,item,"RETRYABLE",type(exc).__name__)
+   return {"job_id":item.job_id if item else None,"status":"RETRYABLE"}
 def main():
  settings=get_settings()
  if settings.environment!="production":init_db()
  worker=ApplicationWorker()
+ with SessionLocal() as db:CareerIntelligenceService(settings=settings).recover_abandoned(db,worker.worker_id)
  while True:
-  with SessionLocal() as db:worker.run_once(db)
+  try:
+   with SessionLocal() as db:worker.run_once(db)
+  except Exception:
+   # No single queue item or intelligence run may terminate the worker loop.
+   pass
   time.sleep(settings.worker_poll_seconds)
 if __name__=="__main__":main()

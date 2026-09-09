@@ -71,7 +71,7 @@ def scan_jobs(request: ScanRequest, db: Session = Depends(get_db)):
 def score_job(job_id: int, db: Session = Depends(get_db)):
     record = service.get(db, job_id)
     if not record: raise HTTPException(404, "Job not found")
-    profile, preferences = profile_and_preferences(); result = FitAgent(DeterministicScoringEngine()).evaluate(service.to_schema(record), profile, preferences); service.save_score(db, job_id, result); return result
+    service.evaluate_catalog(db); profile, preferences = profile_and_preferences(); result = FitAgent(DeterministicScoringEngine()).evaluate(service.to_schema(record), profile, preferences); service.save_score(db, job_id, result); return result
 
 
 def change_status(job_id: int, status: ApplicationStatus, db: Session) -> ApplicationRead:
@@ -86,6 +86,14 @@ def shortlist_job(job_id: int, db: Session = Depends(get_db)): return change_sta
 
 @router.post("/{job_id}/skip", response_model=ApplicationRead)
 def skip_job(job_id: int, db: Session = Depends(get_db)): return change_status(job_id, ApplicationStatus.skipped, db)
+
+
+@router.post("/{job_id}/status/{status}", response_model=ApplicationRead)
+def set_user_pipeline_status(job_id: int, status: ApplicationStatus, db: Session = Depends(get_db)):
+    """Record an explicit user-controlled pipeline transition; opening a job never calls this."""
+    allowed={ApplicationStatus.shortlisted,ApplicationStatus.applied,ApplicationStatus.interview,ApplicationStatus.offer,ApplicationStatus.hired,ApplicationStatus.rejected,ApplicationStatus.no_response,ApplicationStatus.withdrawn}
+    if status not in allowed:raise HTTPException(400,"Unsupported user pipeline status")
+    return change_status(job_id,status,db)
 
 
 def ingestion_service():

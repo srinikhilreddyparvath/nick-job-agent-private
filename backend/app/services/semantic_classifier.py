@@ -1,4 +1,5 @@
 import json
+from app.security.external_content import secured_system_prompt,untrusted_payload
 from app.core.config import Settings,get_settings
 from app.models.job import Job
 from app.models.semantic import ResolvedRoleClassification,SemanticRoleClassification
@@ -9,7 +10,7 @@ from app.services.role_family_service import DeterministicRoleFamilyClassifier
 class SemanticRoleFamilyClassifier:
     def __init__(self,llm:LLMService):self.llm=llm
     def classify(self,job:Job)->SemanticRoleClassification:
-        value,_=self.llm.generate_structured(SYSTEM,json.dumps({"title":job.title,"description":job.description,"requirements":job.requirements,"preferred_qualifications":job.preferred_qualifications}),SemanticRoleClassification);return value
+        value,_=self.llm.generate_structured(secured_system_prompt(SYSTEM),untrusted_payload(external={"title":job.title,"description":job.description,"requirements":job.requirements,"preferred_qualifications":job.preferred_qualifications},label="job_posting"),SemanticRoleClassification);return value
 class RoleClassificationPolicy:
     def __init__(self,semantic:SemanticRoleFamilyClassifier|None=None,settings:Settings|None=None):self.deterministic=DeterministicRoleFamilyClassifier();self.semantic=semantic;self.settings=settings or get_settings()
     def classify(self,job:Job)->ResolvedRoleClassification:

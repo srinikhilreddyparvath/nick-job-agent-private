@@ -18,7 +18,7 @@ class JobIngestionService:
  def _persist(self,db:Session,job:Job)->JobIngestResult:
     classification=self.classifier.classify(job);job.role_family=classification.role_family;job.role_family_confidence=classification.confidence;job.role_family_reasons=classification.reasons
     duplicate=self.dedupe.find_duplicate(db,job)
-    if duplicate:self.dedupe.record_alternate(db,duplicate,job);return JobIngestResult(status="duplicate",job=self.jobs.to_schema(self.jobs.get(db,duplicate.id)),duplicate=True,message="Matched existing opening; alternate source recorded")
+    if duplicate:self.dedupe.record_alternate(db,duplicate,job);self.jobs.evaluate_catalog(db);return JobIngestResult(status="duplicate",job=self.jobs.to_schema(self.jobs.get(db,duplicate.id)),duplicate=True,message="Matched existing opening; alternate source recorded")
     record=self.jobs.create(db,job);baseline=self.baseline.evaluate(job,self.profile,self.preferences);self.jobs.save_score(db,record.id,baseline);family=self.family.score(job,self.profile,self.preferences);self.jobs.save_family_fit(db,record.id,classification,family);return JobIngestResult(status="saved",job=self.jobs.to_schema(self.jobs.get(db,record.id)),message="Job normalized, classified, saved, and scored")
  def ingest_url(self,db:Session,url:str)->JobIngestResult:
     try:r=httpx.get(url,timeout=20,follow_redirects=True,headers={"User-Agent":"CareerIntelligenceAgent/0.1"});r.raise_for_status()

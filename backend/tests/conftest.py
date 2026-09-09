@@ -24,7 +24,16 @@ from app.main import app
 
 
 @pytest.fixture(autouse=True)
-def clean_database():
+def clean_database(tmp_path, monkeypatch):
+    import shutil
+    from app.core.config import get_settings
+    settings = get_settings()
+    root = Path(__file__).resolve().parents[2] / "data"
+    for field, filename in (("candidate_profile_path", "profile.example.json"), ("candidate_preferences_path", "preferences.example.json"), ("candidate_evidence_path", "evidence.example.json")):
+        target = tmp_path / filename
+        shutil.copyfile(root / filename, target)
+        monkeypatch.setattr(settings, field, str(target))
+    monkeypatch.setattr(settings, "candidate_private_storage_path", str(tmp_path / "private"))
     Base.metadata.drop_all(bind=engine); Base.metadata.create_all(bind=engine)
     yield
     Base.metadata.drop_all(bind=engine)

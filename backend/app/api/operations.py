@@ -46,9 +46,9 @@ def reset_local_state(body:ResetInput,db:Session=Depends(get_db)):
  except ValueError as exc:raise HTTPException(422,str(exc)) from exc
 @router.post("/jobs/{job_id}/never-apply")
 def never_apply(job_id:int,body:ExclusionInput,db:Session=Depends(get_db)):
- row=db.get(JobExclusionRecord,job_id) or JobExclusionRecord(job_id=job_id,reason=body.reason);row.reason=body.reason;db.add(row);db.commit();return {"job_id":job_id,"never_apply":True}
+ row=db.scalar(select(JobExclusionRecord).where(JobExclusionRecord.job_id==job_id)) or JobExclusionRecord(job_id=job_id,reason=body.reason);row.reason=body.reason;db.add(row);db.commit();return {"job_id":job_id,"never_apply":True}
 @router.delete("/jobs/{job_id}/never-apply")
 def allow_apply(job_id:int,db:Session=Depends(get_db)):
- row=db.get(JobExclusionRecord,job_id)
+ row=db.scalar(select(JobExclusionRecord).where(JobExclusionRecord.job_id==job_id))
  if row:db.delete(row);db.commit()
  return {"job_id":job_id,"never_apply":False}

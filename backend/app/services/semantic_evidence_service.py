@@ -9,6 +9,7 @@ from app.db.models import EvidenceEmbeddingRecord
 from app.models.semantic import RetrievalMethod,SemanticEvidenceResult
 from app.services.embedding_service import EmbeddingError,EmbeddingService,configured_embedding_service
 from app.services.evidence_service import EvidenceService
+from app.services.candidate_context_service import current_context
 
 
 def evidence_version(records)->str:
@@ -19,7 +20,7 @@ def cosine(a,b):
 class SemanticEvidenceIndex:
     def __init__(self,evidence:EvidenceService|None=None,embeddings:EmbeddingService|None=None):self.evidence=evidence or EvidenceService();self.embeddings=embeddings or configured_embedding_service()
     @property
-    def version(self):return evidence_version(self.evidence.all())
+    def version(self):return hashlib.sha256((current_context().key + evidence_version(self.evidence.all())).encode()).hexdigest()
     def reindex(self,db:Session,force:bool=False)->dict:
         records=self.evidence.all();version=self.version
         existing=db.scalar(select(EvidenceEmbeddingRecord.id).where(EvidenceEmbeddingRecord.evidence_version==version,EvidenceEmbeddingRecord.provider==self.embeddings.provider.name,EvidenceEmbeddingRecord.model==self.embeddings.provider.model).limit(1))

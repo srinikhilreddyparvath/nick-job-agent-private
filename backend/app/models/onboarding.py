@@ -11,7 +11,14 @@ class ResumeMetadata(BaseModel):
     file_type: Literal["pdf", "docx", "txt"]
     text_length: int
     page_count: int | None = None
-    extraction_status: Literal["EXTRACTED", "PARTIAL"] = "EXTRACTED"
+    file_size: int = 0
+    extraction_method: Literal["PDF_TEXT", "DOCX_TEXT", "TXT_DECODE", "OCR", "NONE"] = "NONE"
+    text_quality_status: Literal["GOOD", "USABLE", "LOW_QUALITY", "SCANNED_OR_IMAGE_ONLY", "EMPTY", "CORRUPTED"] = "GOOD"
+    extraction_status: Literal["EXTRACTED", "PARTIAL", "NEEDS_ATTENTION"] = "EXTRACTED"
+    normalization_status: Literal["COMPLETED", "NEEDS_ATTENTION"] = "COMPLETED"
+    detected_sections: list[str] = Field(default_factory=list)
+    model_counts: dict[str, int] = Field(default_factory=dict)
+    grounded_counts: dict[str, int] = Field(default_factory=dict)
 
 
 class CandidateExtractionDraft(BaseModel):
@@ -30,26 +37,31 @@ class ExtractedResumeItem(BaseModel):
 class ExtractedEmployment(BaseModel):
     employer: str
     title: str
-    start_date: str | None
-    end_date: str | None
-    responsibilities: list[str]
-    accomplishments: list[str]
-    source_section: str
-    supporting_text: str
+    start_date: str | None = None
+    end_date: str | None = None
+    location: str | None = None
+    responsibilities: list[str] = Field(default_factory=list)
+    accomplishments: list[str] = Field(default_factory=list)
+    source_section: str = "unspecified"
+    supporting_text: str = ""
     confidence: float = Field(ge=0, le=1)
 
 
 class ResumeExtractionPayload(BaseModel):
-    professional_name: str | None
-    professional_summary: ExtractedResumeItem | None
-    employment: list[ExtractedEmployment]
-    skills: list[ExtractedResumeItem]
-    education: list[ExtractedResumeItem]
-    projects: list[ExtractedResumeItem]
-    certifications: list[ExtractedResumeItem]
-    domains: list[ExtractedResumeItem]
-    technologies: list[ExtractedResumeItem]
-    warnings: list[str]
+    professional_name: str | None = None
+    professional_summary: ExtractedResumeItem | None = None
+    employment: list[ExtractedEmployment] = Field(default_factory=list)
+    skills: list[ExtractedResumeItem] = Field(default_factory=list)
+    education: list[ExtractedResumeItem] = Field(default_factory=list)
+    projects: list[ExtractedResumeItem] = Field(default_factory=list)
+    certifications: list[ExtractedResumeItem] = Field(default_factory=list)
+    domains: list[ExtractedResumeItem] = Field(default_factory=list)
+    technologies: list[ExtractedResumeItem] = Field(default_factory=list)
+    research: list[ExtractedResumeItem] = Field(default_factory=list)
+    publications: list[ExtractedResumeItem] = Field(default_factory=list)
+    patents: list[ExtractedResumeItem] = Field(default_factory=list)
+    leadership: list[ExtractedResumeItem] = Field(default_factory=list)
+    warnings: list[str] = Field(default_factory=list)
 
 
 class ResumeIngestionResult(BaseModel):
@@ -66,6 +78,8 @@ class OnboardingApprovalRequest(BaseModel):
     profile: CandidateProfile
     evidence: list[EvidenceRecord]
     preferences: JobPreferences
+    confirm_replacement: bool = False
+    preferences_reviewed: bool = False
 
 
 class OnboardingState(BaseModel):
@@ -73,3 +87,4 @@ class OnboardingState(BaseModel):
     evidence: list[EvidenceRecord]
     preferences: JobPreferences
     configured: bool
+    replacement_pending: bool = False

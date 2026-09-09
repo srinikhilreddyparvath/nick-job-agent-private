@@ -6,8 +6,11 @@ from app.models.job import ComponentScore, Job, Recommendation, ScoreResult
 from app.models.profile import CandidateProfile, JobPreferences
 
 
+GENERIC_TERMS = {"the", "and", "for", "with", "from", "that", "this", "our", "you", "your", "will", "have", "has", "are", "was", "were", "into", "across", "using", "work", "working", "experience", "team", "teams", "role", "skills", "ability", "strong", "excellent", "including", "problem", "problems", "requirements", "customer", "customers", "data", "research", "platform", "product", "manager", "senior", "staff", "lead", "support", "develop", "development", "management"}
+
+
 def terms(values:list[str])->set[str]:
-    return {word for value in values for word in re.findall(r"[a-z0-9+#.]+",value.lower()) if len(word)>2}
+    return {word for value in values for word in re.findall(r"[a-z0-9+#.]+",value.lower()) if len(word)>2 and word not in GENERIC_TERMS}
 
 
 class ScoringEngine(ABC):

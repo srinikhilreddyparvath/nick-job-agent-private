@@ -23,4 +23,6 @@ def test_job_lifecycle(client):
     shortlisted = client.post(f"/jobs/{job_id}/shortlist")
     assert shortlisted.json()["status"] == "shortlisted"
     assert client.get(f"/jobs/{job_id}").json()["application_status"] == "shortlisted"
-
+    applied = client.post(f"/jobs/{job_id}/status/applied")
+    assert applied.status_code == 200 and applied.json()["status"] == "applied"
+    assert client.get(f"/jobs/{job_id}").json()["application_status"] == "applied"

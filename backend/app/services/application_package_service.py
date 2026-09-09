@@ -35,7 +35,8 @@ class ApplicationPackageService:
             "answer_bank":Path(self.settings.candidate_answer_bank_path),
             "master_resume":root/"documents/master_resume.pdf",
         }
-        inputs={}
+        from app.services.candidate_context_service import current_context
+        inputs={"candidate_context":current_context().key}
         for name,path in configured.items():
             resolved=path if path.is_absolute() else (root/"backend"/path).resolve()
             inputs[name]=hashlib.sha256(resolved.read_bytes()).hexdigest() if resolved.exists() else "missing"

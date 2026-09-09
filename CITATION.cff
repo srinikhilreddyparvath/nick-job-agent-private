@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+message: "If RoleCall supports your research, teaching, project, or publication, please cite the software."
+title: RoleCall
+type: software
+authors:
+  - family-names: Parvath
+    given-names: Nick
+year: 2026
+license: Apache-2.0

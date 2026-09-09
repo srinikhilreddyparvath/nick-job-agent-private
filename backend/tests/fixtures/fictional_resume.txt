@@ -1,0 +1,9 @@
+Alex Morgan
+Machine Learning Engineer
+
+Built and evaluated retrieval systems using Python and SQL.
+Developed search-quality experiments and relevance metrics.
+Collaborated with product and engineering partners to ship reliable data workflows.
+
+Skills: Python, SQL, information retrieval, experiment design, machine learning
+Education: Master of Science in Computer Science, Example University

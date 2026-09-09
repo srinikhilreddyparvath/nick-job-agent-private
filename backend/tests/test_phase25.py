@@ -27,14 +27,35 @@ def test_role_family_classifications():
  assert classifier.classify(job("Research Engineer, Agents","Build applied AI agent evaluation systems")).role_family==RoleFamily.research_ai
  assert classifier.classify(job("Senior Data Scientist, Experimentation","Statistical measurement and causal experimentation")).role_family==RoleFamily.data_science
  assert classifier.classify(job("Senior Product Manager, AI Platform","Lead product strategy with ML engineering stakeholders")).role_family==RoleFamily.product_management
- assert classifier.classify(job("Software Engineer, Backend","Build Go APIs and databases")).role_family==RoleFamily.unknown
+ assert classifier.classify(job("Software Engineer, Backend","Build Go APIs and databases")).role_family==RoleFamily.software_engineering
 
 def test_family_scoring_and_pm_transition():
  profile=CandidateProfile();prefs=JobPreferences();engine=FamilyScoringEngine();classifier=DeterministicRoleFamilyClassifier()
  research=job("Applied Scientist","Applied research, machine learning evaluation, Python and production experiments");research.role_family=classifier.classify(research).role_family
- assert set(engine.score(research,profile,prefs).family_component_scores)=={"research_alignment","technical_alignment","ml_ai_depth","experience_alignment","skills_alignment","production_research_fit","location_compensation"}
+ assert set(engine.score(research,profile,prefs).family_component_scores)=={"candidate_fit","target_role_alignment","grounded_domain_evidence","role_family_gate"}
  pm=job("AI Product Manager","Lead AI platform product strategy, stakeholder alignment, launch planning and engineering collaboration");pm.role_family=classifier.classify(pm).role_family;result=engine.score(pm,profile,prefs)
- assert result.career_transition_flag and "not prior Product Manager employment" in result.career_transition_notes
+ assert not result.career_transition_flag and result.family_fit_score<=35
+ explicit=engine.score(pm,profile,JobPreferences(preferred_titles=["Product Manager"]))
+ assert explicit.career_transition_flag and explicit.family_fit_score<=69
+
+def test_family_scoring_respects_candidate_targets_and_supports_other_careers():
+ engine=FamilyScoringEngine();classifier=DeterministicRoleFamilyClassifier();profile=CandidateProfile()
+ product_prefs=JobPreferences(preferred_titles=["Senior Product Manager"])
+ research=job("Research Engineer","Applied research and machine learning evaluation");research.role_family=classifier.classify(research).role_family
+ assert engine.score(research,profile,product_prefs).family_fit_score<=35
+ healthcare=job("Clinical Research Associate","Coordinate clinical trials and protocol documentation");healthcare.role_family=classifier.classify(healthcare).role_family
+ result=engine.score(healthcare,profile,JobPreferences(preferred_titles=["Clinical Research Associate"]))
+ assert result.family_fit_score>35 and result.role_family==RoleFamily.clinical_research
+
+def test_family_scoring_respects_target_roles_and_supports_generic_careers():
+ engine=FamilyScoringEngine();classifier=DeterministicRoleFamilyClassifier();profile=CandidateProfile()
+ prefs=JobPreferences(preferred_titles=["Senior Product Manager","Platform Product Manager"])
+ pm=job("Senior Product Manager, Platform","Lead platform product strategy and stakeholder alignment");pm.role_family=classifier.classify(pm).role_family
+ research=job("Research Engineer, Pre-training","Build machine learning research systems");research.role_family=classifier.classify(research).role_family
+ assert engine.score(pm,profile,prefs).family_fit_score>engine.score(research,profile,prefs).family_fit_score
+ healthcare=job("Clinical Research Coordinator","Coordinate clinical trial protocols and participant screening");healthcare.role_family=classifier.classify(healthcare).role_family
+ generic=engine.score(healthcare,profile,JobPreferences(preferred_titles=["Clinical Research Coordinator"]))
+ assert healthcare.role_family==RoleFamily.clinical_research and generic.family_fit_score>45
 
 def test_hard_filter_does_not_require_search_keywords():
  role=job("Senior Data Scientist, Experimentation","Build statistical causal models and product experiments");result=JobFilterService().evaluate(role,JobPreferences(preferred_domains=["Search","Ranking","Personalization"]));assert result.passes
@@ -68,7 +89,7 @@ def test_company_registry_and_company_source_relationship(client):
 
 def test_manual_text_ingestion_linkedin_and_role_filter(client):
  data={"source_url":"https://www.linkedin.com/jobs/view/123","company":"Acme AI","title":"Senior Product Manager, AI Platform","job_description_text":"Lead AI product strategy with machine learning engineering, stakeholder alignment, experimentation, and launch planning."}
- response=client.post("/jobs/ingest-text",json=data);assert response.status_code==200;result=response.json();assert result["job"]["source"]=="linkedin_reference" and result["job"]["role_family"]=="PRODUCT_MANAGEMENT" and result["job"]["career_transition_flag"]
+ response=client.post("/jobs/ingest-text",json=data);assert response.status_code==200;result=response.json();assert result["job"]["source"]=="linkedin_reference" and result["job"]["role_family"]=="PRODUCT_MANAGEMENT" and not result["job"]["career_transition_flag"]
  assert client.get("/jobs?role_family=PRODUCT_MANAGEMENT").json()["total"]==1
 
 def test_manual_url_ingestion_from_public_jsonld(client,monkeypatch):
