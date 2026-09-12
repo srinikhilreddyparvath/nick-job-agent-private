@@ -46,8 +46,9 @@ def get_analysis(job_id:int,db:Session=Depends(get_db)):
     record=db.scalar(select(SemanticAnalysisRecord).where(SemanticAnalysisRecord.job_id==job_id).order_by(SemanticAnalysisRecord.created_at.desc()))
     from app.services.candidate_context_service import current_context, job_version
     context = current_context()
+    from app.prompts.fit_analysis_v1 import VERSION as semantic_version
     job_record = JobService().get(db, job_id)
-    if not record or not job_record or context.pending or record.report_json.get("job_version") != job_version(job_record):
+    if not record or not job_record or context.pending or record.prompt_version != semantic_version or record.report_json.get("job_version") != job_version(job_record):
         raise HTTPException(404,"Current candidate semantic analysis not found")
     try:
         context.validate_evidence(record.report_json.get("evidence_ids", []))

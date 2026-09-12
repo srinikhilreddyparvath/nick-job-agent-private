@@ -20,6 +20,17 @@ class RoleFamilyClassifier(ABC):
 class DeterministicRoleFamilyClassifier(RoleFamilyClassifier):
  def classify(self,job:Job)->RoleFamilyClassification:
     title=f" {job.title.lower()} "; body=" ".join([job.description,*job.requirements,*job.preferred_qualifications]).lower(); results={}
+    # Scientist/engineer are used in many professions. Research alone is not AI.
+    generic_research = any(value in title for value in ("research scientist", "research engineer", "applied scientist"))
+    content = title + " " + body
+    ai_context = re.search(r"\b(ai|ml|llm|nlp|neural|retrieval|ranking|pytorch|tensorflow|machine[ -]learning|artificial intelligence|computer vision)\b", content)
+    if generic_research and not ai_context:
+      for family, phrases in (
+          (RoleFamily.clinical_research, ("clinical trial", "clinical research", "oncology", "cancer", "gcp", "irb")),
+          (RoleFamily.public_health, ("public health", "epidemiology", "population health"))):
+        if any(phrase in content for phrase in phrases):
+          return RoleFamilyClassification(role_family=family, confidence=.8, reasons=["Research responsibilities establish the professional domain"])
+      return RoleFamilyClassification(role_family=RoleFamily.research, confidence=.65, reasons=["Research title without evidence of an AI specialization"])
     for family,signals in FAMILY_SIGNALS.items():
       title_hits=[x for x in signals["titles"] if x in title]; domain_hits=[x for x in signals["domains"] if x in f" {body} {title} "]
       score=min(1,0.65*min(1,len(title_hits))+0.12*min(3,len(domain_hits)))

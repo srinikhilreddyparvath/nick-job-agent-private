@@ -71,7 +71,13 @@ def scan_jobs(request: ScanRequest, db: Session = Depends(get_db)):
 def score_job(job_id: int, db: Session = Depends(get_db)):
     record = service.get(db, job_id)
     if not record: raise HTTPException(404, "Job not found")
-    service.evaluate_catalog(db); profile, preferences = profile_and_preferences(); result = FitAgent(DeterministicScoringEngine()).evaluate(service.to_schema(record), profile, preferences); service.save_score(db, job_id, result); return result
+    from app.services.candidate_context_service import current_context
+    context = current_context()
+    if context.pending: raise HTTPException(409, "Approve the replacement resume before scoring jobs")
+    service.evaluate_catalog(db, context, job_id=job_id)
+    result = FitAgent(DeterministicScoringEngine()).evaluate(service.to_schema(record, context=context), context.profile, context.preferences)
+    service.save_score(db, job_id, result, context)
+    return result
 
 
 def change_status(job_id: int, status: ApplicationStatus, db: Session) -> ApplicationRead:
@@ -102,7 +108,9 @@ def ingestion_service():
 def ingest_url(data:JobUrlIngestRequest,db:Session=Depends(get_db)):
     try:return ingestion_service().ingest_url(db,str(data.url))
     except ConnectorError as exc:raise HTTPException(422,str(exc)) from exc
+    except ValueError as exc:raise HTTPException(409,str(exc)) from exc
 @router.post("/ingest-text",response_model=JobIngestResult)
 def ingest_text(data:JobTextIngestRequest,db:Session=Depends(get_db)):
     try:return ingestion_service().ingest_text(db,data)
     except ConnectorError as exc:raise HTTPException(422,str(exc)) from exc
+    except ValueError as exc:raise HTTPException(409,str(exc)) from exc

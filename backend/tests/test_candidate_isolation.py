@@ -224,3 +224,123 @@ def test_ui_filters_are_generated_from_returned_families():
     assert 'const families=["ALL","RESEARCH_AI"' not in source
     assert 'freshPreferences(result.draft.profile.roles)' in (Path(__file__).resolve().parents[2]/'frontend/app/onboarding/page.tsx').read_text()
 
+
+def test_reused_ingestion_service_cannot_relabel_old_candidate_fit():
+    from app.models.ingestion import JobTextIngestRequest
+    from app.services.ingestion_service import JobIngestionService
+    state = approve('AI')
+    service = JobIngestionService(state.profile, state.preferences)
+    approve('CLINICAL')
+    with SessionLocal() as db:
+        result = service.ingest_text(db, JobTextIngestRequest(
+            title='Machine Learning Engineer', company='Fictional Ingestion Lab',
+            source_url='https://example.test/ingestion',
+            job_description_text='machine learning retrieval search ranking pytorch tensorflow nlp llm python'))
+        assert result.job.fit_score <= 35
+        assert not result.job.matched_evidence_ids
+        assert not result.job.matched_skills
+
+
+def test_analyze_before_find_jobs_still_applies_clinical_family_gate(client):
+    approve('CLINICAL')
+    with SessionLocal() as db:
+        record = JobService().create(db, Job.model_validate(FIXTURE['jobs'][0]))
+        job_id = record.id
+    response = client.post(f'/jobs/{job_id}/analyze', json={'use_mock': True})
+    assert response.status_code == 200
+    assert response.json()['report'], response.json()
+    job = client.get(f'/jobs/{job_id}').json()
+    assert job['fit_score'] is not None
+    assert job['family_component_scores']['role_family_gate']['score'] <= 35
+    assert job['opportunity_score']['overall_score'] <= 35
+
+
+def test_reused_evidence_index_rejects_foreign_candidate():
+    from app.services.semantic_evidence_service import SemanticEvidenceIndex
+    approve('AI')
+    index = SemanticEvidenceIndex()
+    approve('CLINICAL')
+    with SessionLocal() as db, pytest.raises(ValueError, match='Evidence does not belong'):
+        index.reindex(db)
+
+
+def test_company_research_cache_allows_same_job_for_distinct_candidates():
+    from app.db.models import CompanyResearchRecord
+    from app.services.research_service import ResearchService, SuppliedDataResearchProvider
+    approve('AI')
+    service = ResearchService(configured_llm_service(use_mock=True), SuppliedDataResearchProvider())
+    with SessionLocal() as db:
+        record = JobService().create(db, Job.model_validate(FIXTURE['jobs'][0]))
+        for label in ['AI', 'CLINICAL', 'PRODUCT']:
+            if label != 'AI': approve(label)
+            result = service.research(db, record.id)
+            assert result.report and not result.report.cache_hit, result.error
+            assert service.research(db, record.id).report.cache_hit
+        rows = db.scalars(select(CompanyResearchRecord).execution_options(candidate_history_audit=True)).all()
+        assert len(rows) == 3 and len({row.fingerprint for row in rows}) == 3
+
+
+def test_job_edit_invalidates_fit_and_semantics(client):
+    approve('AI')
+    with SessionLocal() as db:
+        record = JobService().create(db, Job.model_validate(FIXTURE['jobs'][0]))
+        JobService().evaluate_catalog(db)
+        result = SemanticAnalysisService(configured_llm_service(use_mock=True)).analyze(db, record.id)
+        assert result.report
+        record.salary_currency = 'EUR'
+        db.commit()
+        assert JobService().to_schema(record).fit_score is None
+        assert client.get(f'/jobs/{record.id}/analysis').status_code == 404
+
+
+def test_corrupt_evaluation_is_repaired_by_find_jobs():
+    approve('AI')
+    with SessionLocal() as db:
+        record = JobService().create(db, Job.model_validate(FIXTURE['jobs'][0]))
+        JobService().evaluate_catalog(db)
+        row = JobService().evaluation(db, record.id)
+        db.connection().execute(JobScoreRecord.__table__.update().where(JobScoreRecord.id == row.id)
+                                .values(matched_evidence_ids=['FOREIGN']))
+        db.commit(); db.expire_all()
+        assert JobService().evaluate_catalog(db) == 1
+        assert JobService().to_schema(record).fit_score is not None
+
+
+@pytest.mark.parametrize(('title', 'description', 'expected'), [
+    ('Research Scientist', 'Lead oncology clinical trials with IRB and GCP protocols.', 'CLINICAL_RESEARCH'),
+    ('Applied Scientist', 'Study public health and population health outcomes.', 'PUBLIC_HEALTH'),
+    ('Research Engineer', 'Develop laboratory instruments and study design.', 'RESEARCH'),
+    ('Research Scientist', 'Develop machine learning retrieval and ranking models.', 'RESEARCH_AI'),
+])
+def test_generic_research_titles_are_profession_neutral(title, description, expected):
+    from app.services.role_family_service import DeterministicRoleFamilyClassifier
+    job = Job.model_validate({**FIXTURE['jobs'][0], 'title': title, 'description': description,
+                             'requirements': [], 'preferred_qualifications': []})
+    assert DeterministicRoleFamilyClassifier().classify(job).role_family == expected
+
+
+def test_evaluator_and_prompt_changes_invalidate_current_results(client, monkeypatch):
+    approve('AI')
+    with SessionLocal() as db:
+        record = JobService().create(db, Job.model_validate(FIXTURE['jobs'][0]))
+        result = SemanticAnalysisService(configured_llm_service(use_mock=True)).analyze(db, record.id)
+        assert result.report
+        monkeypatch.setattr('app.prompts.fit_analysis_v1.VERSION', 'updated-prompt')
+        assert JobService().to_schema(record).semantic_analysis_status == 'NOT_ANALYZED'
+        assert client.get(f'/jobs/{record.id}/analysis').status_code == 404
+        monkeypatch.setattr('app.services.candidate_context_service.EVALUATOR_VERSION', 'updated-evaluator')
+        assert JobService().to_schema(record).fit_score is None
+
+
+def test_explicit_transition_requires_review_and_preserves_evidence_limits():
+    state = approve('CLINICAL')
+    preferences = state.preferences.model_copy(update={'preferred_titles': ['Product Manager']})
+    CandidatePersistenceService().save_preferences(preferences)
+    job = Job.model_validate({**FIXTURE['jobs'][0], 'title': 'Product Manager',
+                             'description': 'product management roadmap product strategy product discovery',
+                             'requirements': [], 'preferred_qualifications': []})
+    result = FamilyScoringEngine().score(job, state.profile, current_context().preferences)
+    assert result.career_transition_flag
+    assert result.family_fit_score <= 69
+    assert not result.matched_evidence_ids
+

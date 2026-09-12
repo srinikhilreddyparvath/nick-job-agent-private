@@ -1,8 +1,11 @@
 ﻿import os
 from pathlib import Path
 import sys
+import tempfile
 
-os.environ["DATABASE_URL"] = "sqlite:///./test_nick_job_agent.db"
+# Never drop a pre-existing database in the developer's working directory.
+_test_storage = tempfile.TemporaryDirectory(prefix="rolecall-pytest-")
+os.environ["DATABASE_URL"] = "sqlite:///" + (Path(_test_storage.name) / "tests.db").as_posix()
 os.environ["LLM_ENABLED"] = "false"
 os.environ["LLM_PROVIDER"] = "mock"
 os.environ["LLM_MODEL"] = "mock-semantic-v1"
@@ -14,6 +17,8 @@ os.environ["CANDIDATE_PREFERENCES_PATH"] = "../data/preferences.example.json"
 os.environ["CANDIDATE_EVIDENCE_PATH"] = "../data/evidence.example.json"
 os.environ["CANDIDATE_ANSWER_BANK_PATH"] = "../data/answer_bank.example.json"
 os.environ["CANDIDATE_APPLICATION_POLICY_PATH"] = "../data/application_policy.example.json"
+os.environ["APPLICATION_MODE"] = "manual"
+os.environ["AUTO_SUBMIT_ENABLED"] = "false"
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import pytest
@@ -21,6 +26,15 @@ from fastapi.testclient import TestClient
 
 from app.db.database import Base, engine
 from app.main import app
+
+
+@pytest.fixture(scope="session", autouse=True)
+def close_test_database():
+    yield
+    from sqlalchemy.orm import close_all_sessions
+    close_all_sessions()
+    engine.dispose()
+    _test_storage.cleanup()
 
 
 @pytest.fixture(autouse=True)

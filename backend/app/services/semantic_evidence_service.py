@@ -9,7 +9,7 @@ from app.db.models import EvidenceEmbeddingRecord
 from app.models.semantic import RetrievalMethod,SemanticEvidenceResult
 from app.services.embedding_service import EmbeddingError,EmbeddingService,configured_embedding_service
 from app.services.evidence_service import EvidenceService
-from app.services.candidate_context_service import current_context
+from app.services.candidate_context_service import current_context, assert_current
 
 
 def evidence_version(records)->str:
@@ -22,11 +22,13 @@ class SemanticEvidenceIndex:
     @property
     def version(self):return hashlib.sha256((current_context().key + evidence_version(self.evidence.all())).encode()).hexdigest()
     def reindex(self,db:Session,force:bool=False)->dict:
+        context = current_context()
+        context.validate_evidence([record.id for record in self.evidence.all()])
         records=self.evidence.all();version=self.version
         existing=db.scalar(select(EvidenceEmbeddingRecord.id).where(EvidenceEmbeddingRecord.evidence_version==version,EvidenceEmbeddingRecord.provider==self.embeddings.provider.name,EvidenceEmbeddingRecord.model==self.embeddings.provider.model).limit(1))
         if existing and not force:return {"status":"current","evidence_version":version,"indexed":len(records)}
-        vectors=self.embeddings.embed_batch([x.statement+" "+" ".join(x.skills+x.domains) for x in records]);db.execute(delete(EvidenceEmbeddingRecord).where(EvidenceEmbeddingRecord.provider==self.embeddings.provider.name,EvidenceEmbeddingRecord.model==self.embeddings.provider.model))
-        for record,vector in zip(records,vectors):db.add(EvidenceEmbeddingRecord(evidence_id=record.id,evidence_version=version,provider=vector.provider,model=vector.model,embedding_version=vector.embedding_version,vector=vector.vector,generated_at=vector.generated_at))
+        vectors=self.embeddings.embed_batch([x.statement+" "+" ".join(x.skills+x.domains) for x in records]);assert_current(context);db.execute(delete(EvidenceEmbeddingRecord).where(EvidenceEmbeddingRecord.provider==self.embeddings.provider.name,EvidenceEmbeddingRecord.model==self.embeddings.provider.model))
+        for record,vector in zip(records,vectors):db.add(EvidenceEmbeddingRecord(evidence_id=record.id,evidence_version=version,provider=vector.provider,model=vector.model,embedding_version=vector.embedding_version,vector=vector.vector,generated_at=vector.generated_at,**context.ownership()))
         db.commit();return {"status":"indexed","evidence_version":version,"indexed":len(records)}
     def search(self,db:Session,query:str,limit:int=10,**filters)->list[SemanticEvidenceResult]:
         self.reindex(db);query_vector=self.embeddings.embed_text(query).vector;allowed={x.id:x for x in self.evidence.search(**filters)}

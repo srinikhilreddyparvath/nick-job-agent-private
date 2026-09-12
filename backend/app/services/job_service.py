@@ -32,7 +32,9 @@ class JobService:
         valid = [score for score in record.scores if not context.pending and score.candidate_context_key == context.key
                  and score.job_version == job_version(record) and set(score.matched_evidence_ids or []).issubset(context.evidence_ids)]
         latest = max(valid, key=lambda score: score.created_at) if valid else None
-        analyses = [item for item in record.semantic_analyses if not context.pending and item.candidate_context_key == context.key
+        from app.prompts.fit_analysis_v1 import VERSION as semantic_version
+        analyses = [item for item in record.semantic_analyses if latest and not context.pending and item.candidate_context_key == context.key
+                    and item.prompt_version == semantic_version
                     and item.report_json.get("job_version") == job_version(record)
                     and set(item.report_json.get("evidence_ids", [])).issubset(context.evidence_ids)
                     and all(set(x.get("evidence_ids", [])).issubset(context.evidence_ids) for x in item.report_json.get("strengths", []) if isinstance(x, dict))]
@@ -101,6 +103,16 @@ class JobService:
         if row is None:
             row = JobScoreRecord(job_id=job_id, **context.ownership())
             db.add(row)
+        # A partial rescore must not make old family fit valid for edited job facts.
+        if row.job_version != job_version(db.get(JobRecord, job_id)):
+            row.family_fit_score = None
+            row.family_component_scores = {}
+            row.family_recommendation = None
+            row.family_strengths = []
+            row.family_gaps = []
+            row.matched_evidence_ids = []
+            row.career_transition_flag = False
+            row.career_transition_notes = None
         row.job_version = job_version(db.get(JobRecord, job_id))
         row.overall_score = result.overall_score
         row.component_scores = {key: value.model_dump() for key, value in result.component_scores.items()}
@@ -145,7 +157,7 @@ class JobService:
         row.constraint_results = schema.opportunity_score.constraints.model_dump(mode="json")
         db.commit()
 
-    def evaluate_catalog(self, db, context=None):
+    def evaluate_catalog(self, db, context=None, *, job_id=None):
         from app.services.evidence_service import EvidenceService
         from app.services.scoring_service import DeterministicScoringEngine
         from app.services.family_scoring_service import FamilyScoringEngine
@@ -158,12 +170,17 @@ class JobService:
         family = FamilyScoringEngine(EvidenceService(records=context.evidence))
         scorer = DeterministicScoringEngine()
         count = 0
-        records = db.scalars(select(JobRecord).options(selectinload(JobRecord.scores), selectinload(JobRecord.semantic_analyses),
-                            selectinload(JobRecord.application), selectinload(JobRecord.feedback))).all()
+        query = select(JobRecord).options(selectinload(JobRecord.scores), selectinload(JobRecord.semantic_analyses),
+                                         selectinload(JobRecord.application), selectinload(JobRecord.feedback))
+        if job_id is not None: query = query.where(JobRecord.id == job_id)
+        records = db.scalars(query).all()
         for record in records:
             if record.posting_status in {"CLOSED", "EXPIRED", "NOT_FOUND"}: continue
             row = next((x for x in record.scores if x.candidate_context_key == context.key), None)
-            if row and row.job_version == job_version(record) and row.family_fit_score is not None: continue
+            if (row and row.job_version == job_version(record) and row.family_fit_score is not None
+                    and set(row.matched_evidence_ids or []).issubset(context.evidence_ids)): continue
+            if row and not set(row.matched_evidence_ids or []).issubset(context.evidence_ids):
+                row.matched_evidence_ids = []
             job = self.to_schema(record, context=context)
             classification = classifier.classify(job)
             job.role_family = classification.role_family

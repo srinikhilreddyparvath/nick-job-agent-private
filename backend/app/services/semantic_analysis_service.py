@@ -34,6 +34,9 @@ class SemanticAnalysisService:
         self.validator = EvidenceClaimValidator(self.evidence)
         record=self.jobs.get(db,job_id)
         if not record:return AnalysisResponse(status="not_found",error="Job not found")
+        # Direct Analyze is also an entry point: establish the candidate's family
+        # gate before semantic scores can enter the ranked feed.
+        self.jobs.evaluate_catalog(db, context_snapshot, job_id=job_id)
         tools=build_phase3_tool_registry(db,self.evidence);job=tools.invoke("fit","get_job",{"job_id":job_id});deterministic=job.fit_score
         run=self.runs.start(db,"fit","Produce an evidence-grounded semantic fit report",job_id,{"role_family":job.role_family,"deterministic_score":deterministic},provider=self.llm.provider.name,model=self.llm.provider.model,prompt_version=VERSION,temperature=0)
         try:

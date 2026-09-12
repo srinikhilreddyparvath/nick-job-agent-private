@@ -7,6 +7,8 @@ from pathlib import Path
 from app.core.config import get_settings
 from app.models.profile import CandidateProfile, EvidenceRecord, JobPreferences
 
+EVALUATOR_VERSION = "candidate-fit-v3"
+
 
 def digest(value) -> str:
     return hashlib.sha256(json.dumps(value, sort_keys=True, default=str).encode()).hexdigest()
@@ -84,7 +86,10 @@ def current_context(settings=None) -> CandidateContext:
             if uploaded and documents and not any(uploaded in name for name in documents): pending = True
     key = digest({"profile_id": profile_id, "version": version, "profile": payload,
                   "preferences": preference_version, "evidence": [x.model_dump(mode="json", exclude={"created_at", "updated_at"}) for x in evidence],
-                  "evaluation_schema": "candidate-fit-v2", "pending": pending})
+                  "evaluation_schema": EVALUATOR_VERSION,
+                  "scoring_weights": settings.scoring_weights,
+                  "thresholds": settings.recommendation_thresholds,
+                  "pending": pending})
     return CandidateContext(profile, preferences, evidence, profile_id, version, preference_version, key, pending)
 
 
@@ -94,6 +99,9 @@ def assert_current(context):
 
 
 def job_version(job):
-    return digest({name: str(getattr(job, name, None)) for name in (
-        "id", "source", "external_id", "title", "description", "requirements", "preferred_qualifications",
-        "location", "remote_type", "employment_type", "salary_min", "salary_max")})
+    def value(name):
+        item = getattr(job, name, None)
+        return getattr(item, "value", item)
+    return digest({name: value(name) for name in (
+        "id", "source", "external_id", "company", "title", "description", "requirements", "preferred_qualifications",
+        "location", "remote_type", "employment_type", "salary_min", "salary_max", "salary_currency")})

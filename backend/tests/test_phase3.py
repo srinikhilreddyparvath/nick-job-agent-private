@@ -50,7 +50,7 @@ def test_prompt_versions_are_explicit():
     from app.prompts.fit_analysis_v1 import VERSION as fit
     from app.prompts.research_agent_v1 import VERSION as research
     from app.prompts.role_classifier_v1 import VERSION as classifier
-    assert (fit,research,classifier)==("fit_analysis_v1","research_agent_v1","role_classifier_v1")
+    assert (fit,research,classifier)==("fit_analysis_v1","research_agent_v1","role-classifier-v2")
 
 
 def test_embedding_service_persistence_semantic_and_hybrid_retrieval():

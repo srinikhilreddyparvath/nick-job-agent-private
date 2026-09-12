@@ -64,7 +64,8 @@ def test_global_ranking_happens_before_pagination():
 
 
 def test_persisted_semantic_analysis_drives_job_api_score():
-    db=SessionLocal();service=JobService();record=service.create(db,job(score=60));set_fit(db,record,60);db.add(SemanticAnalysisRecord(job_id=record.id,fingerprint="semantic-fixture",deterministic_score=60,semantic_score=90,blended_score=76.5,report_json={"job_version":job_version(record),"confidence":.9,"strengths":[{"statement":"Grounded match","evidence_ids":[next(iter(current_context().evidence_ids))]}],"gaps":[],"requirement_gaps":[]},provider="mock",model="mock-fit",prompt_version="v1",evidence_version="v1"));db.commit()
+    from app.prompts.fit_analysis_v1 import VERSION
+    db=SessionLocal();service=JobService();record=service.create(db,job(score=60));set_fit(db,record,60);db.add(SemanticAnalysisRecord(job_id=record.id,fingerprint="semantic-fixture",deterministic_score=60,semantic_score=90,blended_score=76.5,report_json={"job_version":job_version(record),"confidence":.9,"strengths":[{"statement":"Grounded match","evidence_ids":[next(iter(current_context().evidence_ids))]}],"gaps":[],"requirement_gaps":[]},provider="mock",model="mock-fit",prompt_version=VERSION,evidence_version="v1"));db.commit()
     result=service.list(db,limit=1).items[0]
     assert result.semantic_fit_score==90 and result.opportunity_score.semantic_fit==90 and result.opportunity_score.why_you_match[0].reason=="Grounded match";db.close()
 
@@ -111,10 +112,11 @@ def test_dashboard_diversification_preserves_raw_score_order(monkeypatch):
 
 
 def test_new_jobs_are_selected_before_already_analyzed_jobs():
+    from app.prompts.fit_analysis_v1 import VERSION
     db=SessionLocal();source(db);service=JobService()
     analyzed=service.create(db,job("analyzed",99));set_fit(db,analyzed,99)
     fresh=service.create(db,job("fresh",70));set_fit(db,fresh,70)
-    db.add(SemanticAnalysisRecord(job_id=analyzed.id,fingerprint="old",semantic_score=99,report_json={"job_version":job_version(analyzed)},provider="mock",model="mock",prompt_version="v1",evidence_version="v1"));db.commit()
+    db.add(SemanticAnalysisRecord(job_id=analyzed.id,fingerprint="old",semantic_score=99,report_json={"job_version":job_version(analyzed)},provider="mock",model="mock",prompt_version=VERSION,evidence_version="v1"));db.commit()
     settings=Settings(llm_enabled=True,llm_provider="mock",llm_model="mock",llm_max_semantic_analyses_per_scan=1,candidate_profile_path="../data/profile.example.json",candidate_evidence_path="../data/evidence.example.json",candidate_preferences_path="../data/preferences.example.json")
     semantic=FixtureSemantic();service=CareerIntelligenceService(settings,semantic=semantic);service.enqueue(db,scan_required=False);service.process_next(db)
     assert semantic.calls==[fresh.id];db.close()
